@@ -37,13 +37,13 @@ Configuración de Variables de Entorno
 1. Para almacenar variables de entorno, hemos creado los archivos .env y .gitignore. Además, instalamos la biblioteca "python-dotenv" para gestionar la importación de estas variables.
 
 2. En el archivo de configuración (settings.py), cambia la ubicación de la clave SECRET_KEY para almacenarla en el archivo .env:
-   <pre>
-   ```python
-   from dotenv import load_dotenv, find_dotenv
-   load_dotenv(find_dotenv())
-   SECRET_KEY = os.environ['SECRET_KEY']
-   ```
-   </pre>
+<pre>
+```python
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+SECRET_KEY = os.environ['SECRET_KEY']
+```
+</pre>
 
 
 
