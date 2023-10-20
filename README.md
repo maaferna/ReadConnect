@@ -67,12 +67,12 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
 En este proyecto, hemos definido una estructura de directorios para plantillas y archivos estáticos en el directorio raíz. Para crear estos directorios, ejecuta los siguientes comandos en la línea de comandos:
    
 <pre>
-   ```bash
-   mkdir templates
-   mkdir static
-   cd static
-   mkdir css
-   mkdir js
+```bash
+mkdir templates
+mkdir static
+cd static
+mkdir css
+mkdir js
 ```
 </pre>
 
@@ -93,16 +93,20 @@ Para comenzar a trabajar en el proyecto, sigue estos pasos:
 
 (Utiliza el protocolo HTTPS)
 2. Crea un entorno virtual con la herramienta pipenv. Pipenv debe estar instalado con Python 3.11 y Django 4.2.3. También puedes utilizar el archivo de requisitos para instalar las bibliotecas necesarias:
+<pre>
    ```bash
    pipenv shell
    pip install -r requirements.txt
-
+   ```
+</pre>
 
 3. Realiza las migraciones de la base de datos y crea un superusuario:
+<pre>
    ```bash
    python manage.py migrate
    python manage.py createsuperuser
-
+   ```
+</pre>
 
 
 ## Base de Datos PostgreSQL en Always Data
