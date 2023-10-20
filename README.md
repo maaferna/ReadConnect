@@ -44,8 +44,14 @@ load_dotenv(find_dotenv())
 SECRET_KEY = os.environ['SECRET_KEY']
 ```
 </pre>
+3. Generar nueva KEY project en Django, en la shell:
+<pre>
+```bash
+python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+</pre>
 
-3. Almacena la clave en el archivo .env:
+4. Almacena la clave en el archivo .env:
 <pre>
 ```makefile
 SECRET_KEY="Inserta aquí la clave de Django para este proyecto"
@@ -104,3 +110,30 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 </pre>
+
+## Base de Datos PostgreSQL en Always Data
+
+Este proyecto utiliza una base de datos PostgreSQL hospedada en Always Data para almacenar y gestionar la información. A continuación, se detallan los pasos para configurar la conexión con la base de datos:
+
+1. Accede a tu cuenta en Always Data y crea una nueva base de datos PostgreSQL si aún no la tienes.
+
+2. Obtén la información de conexión necesaria, que generalmente incluye:
+   - Nombre de la base de datos
+   - Nombre de usuario
+   - Contraseña
+   - Host o dirección del servidor de la base de datos
+   - Puerto (generalmente 5432)
+
+3. Abre el archivo de configuración de tu proyecto Django, `settings.py`, y busca la sección de configuración de la base de datos. Debes modificar las siguientes variables con los datos proporcionados por Always Data:
+
+   ```python
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql',
+           'NAME': 'nombre_de_la_base_de_datos',
+           'USER': 'nombre_de_usuario',
+           'PASSWORD': 'tu_contraseña',
+           'HOST': 'host_de_la_base_de_datos',
+           'PORT': '5432',  # El puerto puede variar según la configuración de Always Data.
+       }
+   }
