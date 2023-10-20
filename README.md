@@ -52,29 +52,27 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
 </pre>
 
 4. Almacena la clave en el archivo .env:
-<pre>
-```makefile
-SECRET_KEY="Inserta aquí la clave de Django para este proyecto"
-```
-</pre>
+
+   ```makefile
+   SECRET_KEY="Inserta aquí la clave de Django para este proyecto"
+
 
 4. Agrega el archivo .env al archivo .gitignore para evitar que se incluya en el repositorio de GitHub:
-<pre>
-```bash
-.env
-```
-</pre>
+
+   ```bash
+   .env
+
 
 ### Esquema de Directorios y Archivos Estáticos
 En este proyecto, hemos definido una estructura de directorios para plantillas y archivos estáticos en el directorio raíz. Para crear estos directorios, ejecuta los siguientes comandos en la línea de comandos:
    
 <pre>
-```bash
-mkdir templates
-mkdir static
-cd static
-mkdir css
-mkdir js
+   ```bash
+   mkdir templates
+   mkdir static
+   cd static
+   mkdir css
+   mkdir js
 ```
 </pre>
 
@@ -82,34 +80,30 @@ mkdir js
 Para comenzar a trabajar en el proyecto, sigue estos pasos:
 
 1. Clona el proyecto en tu directorio local con el siguiente comando:
-<pre>
-```bash
-git clone git@github.com:maaferna/ReadConnect.git
-```
-</pre>
+
+   ```bash
+   git clone git@github.com:maaferna/ReadConnect.git
+
 (Utiliza el protocolo SSH) O
 <pre>
-```bash
-git clone https://github.com/maaferna/project_base_django.git
-```
+   ```bash
+   git clone https://github.com/maaferna/project_base_django.git
+   ```
 </pre>
-(Utiliza el protocolo HTTPS)
 
+(Utiliza el protocolo HTTPS)
 2. Crea un entorno virtual con la herramienta pipenv. Pipenv debe estar instalado con Python 3.11 y Django 4.2.3. También puedes utilizar el archivo de requisitos para instalar las bibliotecas necesarias:
-<pre>
-```bash
-pipenv shell
-pip install -r requirements.txt
-```
-</pre>
+   ```bash
+   pipenv shell
+   pip install -r requirements.txt
+
 
 3. Realiza las migraciones de la base de datos y crea un superusuario:
-<pre>
-```bash
-python manage.py migrate
-python manage.py createsuperuser
-```
-</pre>
+   ```bash
+   python manage.py migrate
+   python manage.py createsuperuser
+
+
 
 ## Base de Datos PostgreSQL en Always Data
 
@@ -137,3 +131,4 @@ Este proyecto utiliza una base de datos PostgreSQL hospedada en Always Data para
            'PORT': '5432',  # El puerto puede variar según la configuración de Always Data.
        }
    }
+
