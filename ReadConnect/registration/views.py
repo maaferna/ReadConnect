@@ -12,6 +12,11 @@ from django.urls import reverse
 
 #Add permission to the views
 from django.contrib.auth.decorators import login_required, permission_required
+from allauth.socialaccount.providers.oauth2.views import OAuth2LoginView
+from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from allauth.socialaccount.helpers import render_authentication_error
+from django.http import HttpResponseRedirect
+from allauth.socialaccount.models import SocialLogin
 
 def view_login(request):
   if request.method == "POST":
@@ -62,3 +67,41 @@ def contact_view(request):
     form = ContactForm
     context = {'form': form}
     return render(request, 'registration/contact.html', context)
+
+
+@login_required
+def profile_view(request):
+    # You can access the user's profile or any other information here
+    user = request.user  # This is the logged-in user
+    context = {
+        'user': user,
+        # Add any other context data you want to display on the profile page
+    }
+    return render(request, 'registration/profile.html', context)
+
+class CustomGoogleOAuth2LoginView(OAuth2LoginView):
+    def login(self):
+        if self.request.method == 'POST':
+            try:
+                app = self.adapter.get_app(self.request)
+                client = app.get_social_app(self.adapter.provider_id)
+                provider = app.get_provider(self.adapter.provider_id)
+
+                response = self.adapter.complete_login(self.request, app, client)
+
+                if not response:
+                    return render_authentication_error(self.request)
+
+                login = self.adapter.login_by_token(self.request, app, response)
+                if login:
+                    # Customize login logic here if needed
+                    # Example: Set a flag to indicate this login is via Google
+                    login.state['via_google'] = True
+                    login.save(request=self.request)
+                    return self.login_by_auth_token(
+                        app, login.token, state=response.get('state')
+                    )
+
+            except OAuth2Error:
+                return render_authentication_error(self.request)
+        return self.oauth2_login()

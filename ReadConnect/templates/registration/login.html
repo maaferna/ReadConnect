@@ -1,6 +1,7 @@
 {% extends "base.html" %} 
 {% block content %} 
 {% load crispy_forms_tags %}
+{% load socialaccount %}
     <!--Login-->
 <br><br>
 <!--Registro-->
@@ -15,6 +16,10 @@
     </form>
     <p class="text-center">Si no tienes una cuenta, registrate en <a
     href="register">, para crear una cuenta</a>.</p>
+    <!-- Google Sign-up Button -->
+    <a href="{% provider_login_url 'google' %}" class="btn btn-danger">
+        Registrarse con Google
+    </a>
 </div>
 
 {% endblock %}
