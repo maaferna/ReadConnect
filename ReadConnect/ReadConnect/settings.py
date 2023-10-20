@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'crispy_forms',
     'rest_framework',
-    'app_name.apps.AppNameConfig', #update this line with real name of apps, see in directory of initial app the apps.py file.
+    'books_store.apps.AppNameConfig', #update this line with real name of apps, see in directory of initial app the apps.py file.
     'registration.apps.RegistrationConfig',
 ]
 
@@ -86,11 +86,10 @@ WSGI_APPLICATION = 'ReadConnect.wsgi.application'
 
 DATABASES = {
     'default': {
-
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME':  os.getenv('db_name'),
-        'USER': 'admin',
-        'PASSWORD': 'claveadmin',
+        'USER': 'mparraf',
+        'PASSWORD': os.getenv('password'),
         'HOST': os.getenv('host_name'), 
         'PORT': '5432',
         'TEST': {'NAME': 'test_db'},
