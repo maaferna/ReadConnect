@@ -188,3 +188,5 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
