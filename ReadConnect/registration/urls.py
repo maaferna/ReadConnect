@@ -13,5 +13,4 @@ urlpatterns = [
     path('accounts/password/reset/', PasswordResetView.as_view(), name='account_reset_password'),
     path('accounts/profile/', profile_view, name='profile_view'),
     path('accounts/google/login/', CustomGoogleOAuth2LoginView, name='custom_google_login'),
-
 ]

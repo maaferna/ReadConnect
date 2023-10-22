@@ -39,17 +39,19 @@ def view_login(request):
 
 
 def view_register(request):
-  if request.method == "POST":
-    form = RegistroUsuarioForm(request.POST)
-    if form.is_valid():
-      user = form.save()
-      #user.groups.add(Group.objects.get(name="visualizar_catalogo"))
-      login(request, user)
-      messages.success(request, "Registrado Satisfactoriamente." )
-      return HttpResponseRedirect('/')
-    messages.error(request, "Registro invalido. Algunos datos ingresados no son correctos")
-  form = RegistroUsuarioForm()
-  return render (request=request, template_name="registration/registro.html", context={"register_form":form})
+    if request.method == "POST":
+        form = RegistroUsuarioForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.backend = 'django.contrib.auth.backends.ModelBackend'  # Set the authentication backend
+            login(request, user)
+            messages.success(request, "Registrado Satisfactoriamente.")
+            return HttpResponseRedirect('/')
+        else:
+            messages.error(request, "Registro inválido. Algunos datos ingresados no son correctos.")
+    else:
+        form = RegistroUsuarioForm()
+    return render(request, template_name="registration/registro.html", context={"register_form": form})
 
 @login_required
 def view_logout(request):

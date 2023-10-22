@@ -5,8 +5,10 @@
 {% block head_title %}Sign Up with Google{% endblock %}
 
 {% block content %}
+<div class="container border p-3 mb-3 bg-light text-dark">
   <h2>Sign Up with Google</h2>
-
+</div>
+<div class="container border p-3 mb-3 bg-light text-dark">
   <form method="post" class="signup-form">
     {% csrf_token %}
     {{ form.as_p }}
