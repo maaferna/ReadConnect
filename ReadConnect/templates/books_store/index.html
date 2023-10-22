@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<br>
+<br>
+
+ <h1>Books List</h1>
+    <ul>
+        {% for book in data %}
+            <li>{{ book.title }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
