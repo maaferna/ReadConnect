@@ -115,17 +115,55 @@
                 <div class="container">
                     <h3>Filters values</h3>
                     <hr>
-                    <h6>
-                        {% if filters_values.0 %}
-                            Authors: {{ filters_values.0 }}
-                        {% endif %}
-                        {% if filters_values.1 %}
-                            {% if filters_values.0 %}
-                                /
-                            {% endif %}
-                            Title: {{ filters_values.1 }}
-                        {% endif %}
-                    </h6>
+                    <div class="row">
+                        <div class="col-4">
+                            <h6>
+                                {% if filters_values.0 %}
+                                    Authors: {{ filters_values.0 }}{% if filters_values.1 or filters_values.2 %} / <br>{% endif %}
+                                {% endif %}
+                                {% if filters_values.1 %}
+                                    Title: {{ filters_values.1 }}{% if filters_values.2 %} / <br>{% endif %}
+                                {% endif %}
+                                {% if filters_values.2 %}
+                                    Category: {{ filters_values.2 }}
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div class="col-4">
+                            <h6>
+                                {% if filters_values.3 %}
+                                    Status: {{ filters_values.3 }}{% if filters_values.1 or filters_values.2 %} / <br>{% endif %}
+                                {% endif %}
+                                {% if filters_values.4 %}
+                                    Range Date: {{ filters_values.4 }}
+                                    {% if filters_values.5 %}
+                                        / {{ filters_values.5 }}
+                                    {% endif %}
+                                    <br>
+                                {% endif %}
+
+                                {% if filters_values.6 %}
+                                    Rango de Paginas: {{ filters_values.6 }}
+                                    {% if filters_values.7 %}
+                                        / {{ filters_values.7 }}
+                                    {% endif %}
+                                    <br>
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div class="col">
+                            <h6>
+                                {% if filters_values.8 %}
+                                    Sorted By: {{ filters_values.8 }}{% if filters_values.1 or filters_values.2 %} / <br>{% endif %}
+                                {% endif %}
+                            </h6>
+                            <h6>
+                                {% if filters_values.9 %}
+                                    Orden: {{ filters_values.9 }}{% if filters_values.1 or filters_values.2 %} / <br>{% endif %}
+                                {% endif %}
+                            </h6>
+                        </div>
+                    </div>
                 </div>
 
                 <hr class="mb-4">

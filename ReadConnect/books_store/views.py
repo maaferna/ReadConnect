@@ -135,6 +135,8 @@ def books_retrieve(request):
                     filtered_data.append(item)
         data = filtered_data
 
+    filters_values.append(start_date)
+    filters_values.append(end_date)
     filtered_data_by_page = []
     if start_page is not None and end_page is not None:
         for item in data:
@@ -158,6 +160,9 @@ def books_retrieve(request):
                     filtered_data_by_page.append(item)
         data = filtered_data_by_page
 
+    filters_values.append(start_page)
+    filters_values.append(end_page)
+
     # Iterate through the JSON data and update the publishedDate
     for item in data:
         if 'publishedDate' in item:
@@ -173,6 +178,8 @@ def books_retrieve(request):
     #Sort by section
     sort_by = request.GET.get('sort_by')
     sort_order = request.GET.get('sort_order')
+    filters_values.append(sort_by)
+    filters_values.append(sort_order)
 
     # Sort the data based on the selected criterion
     # Create a mapping from predefined values to sorting criteria
