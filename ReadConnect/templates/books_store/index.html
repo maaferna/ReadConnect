@@ -41,11 +41,70 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="category" class="text-white">Category:</label>
+                                        <input type="text" class="form-control" id="category" name="category" placeholder="Enter a value">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="status" class="text-white">Status:</label>
+                                        <select class="form-select" id="status" name="status">
+                                            <option value="">Select Status</option>
+                                            {% for status in unique_statuses %}
+                                                <option value="{{ status }}">{{ status }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="start_date" class="text-white">Start Date:</label>
+                                        <input type="date" class="form-control" id="start_date" name="start_date">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="end_date" class="text-white">End Date:</label>
+                                        <input type="date" class="form-control" id="end_date" name="end_date">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="start_page" class="text-white">Start Page Count:</label>
+                                        <input type="number" class="form-control" id="start_page" name="start_page">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="end_page" class="text-white">End Page Count:</label>
+                                        <input type="number" class="form-control" id="end_page" name="end_page">
+                                    </div>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-custom">Search</button>
                         </form>
                     </div>
                 </div>
-
+                <div class="container">
+                    <h3>Filters values</h3>
+                    <hr>
+                    <h6>
+                        {% if filters_values.0 %}
+                            Authors: {{ filters_values.0 }}
+                        {% endif %}
+                        {% if filters_values.1 %}
+                            {% if filters_values.0 %}
+                                /
+                            {% endif %}
+                            Title: {{ filters_values.1 }}
+                        {% endif %}
+                    </h6>
+                </div>
 
                 <hr class="mb-4">
                 {% for book in data %}
@@ -61,12 +120,17 @@
                                         <h5 class="card-subtitle mb-3">ISBN: {{ book.isbn }}</h5>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6">
+                                <div class="row mb-4">
+                                    <div class="col-8">
                                         <p class="card-text">Authors: {{ book.authors }}</p>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col">
                                         <p class="card-text">Status: {{ book.status }}</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-8">
+                                        <p class="card-text">Category: {{ book.categories }}</p>
                                     </div>
                                     <div class="col">
                                         <p class="card-text">N°Paginas: {{ book.pageCount }}</p>
