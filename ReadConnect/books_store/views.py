@@ -47,6 +47,20 @@ def books_retrieve(request):
     status = request.GET.get('status')
     start_date_str = request.GET.get('start_date')
     end_date_str = request.GET.get('end_date')
+    # Get the start_page and end_page from the GET request parameters
+    start_page = request.GET.get('start_page')
+    end_page = request.GET.get('end_page')
+
+    # Parse the start_page and end_page as integers
+    try:
+        start_page = int(start_page)
+    except (ValueError, TypeError):
+        start_page = None
+
+    try:
+        end_page = int(end_page)
+    except (ValueError, TypeError):
+        end_page = None
 
     # Filter data based on the author_name
     if author_name:
@@ -120,7 +134,30 @@ def books_retrieve(request):
                 if date <= end_date:
                     filtered_data.append(item)
         data = filtered_data
-        
+
+    filtered_data_by_page = []
+    if start_page is not None and end_page is not None:
+        for item in data:
+            if 'pageCount' in item:
+                page_count = item['pageCount']
+                if (start_page is None or page_count >= start_page) and (end_page is None or page_count <= end_page):
+                    filtered_data_by_page.append(item)
+        data = filtered_data_by_page
+    elif start_page is not None:
+        for item in data:
+            if 'pageCount' in item:
+                page_count = item['pageCount']
+                if (start_page is None or page_count >= start_page) and (end_page is None):
+                    filtered_data_by_page.append(item)
+        data = filtered_data_by_page
+    elif end_page is not None:
+        for item in data:
+            if 'pageCount' in item:
+                page_count = item['pageCount']
+                if (start_page is None) and (end_page is not None and page_count < end_page):
+                    filtered_data_by_page.append(item)
+        data = filtered_data_by_page
+
     # Iterate through the JSON data and update the publishedDate
     for item in data:
         if 'publishedDate' in item:
