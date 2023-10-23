@@ -22,6 +22,31 @@
         <div class="row g-0">
             <div class="portfolio-box-caption">
                 <h1>Books List</h1>
+                <div class="container-fluid">
+                    <div class="row border mt-3 bg-dark-green">
+                        <h2>Search Form</h2>
+                        <form method="get" action="{% url 'books_retrieve' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="author_name" class="text-white">Author Name:</label>
+                                        <input type="text" class="form-control" id="author_name" name="author_name" placeholder="Enter a value">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="title" class="text-white">Book Title:</label>
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter a value">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-custom">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+
                 <hr class="mb-4">
                 {% for book in data %}
                 <div class="row mb-4">
@@ -48,14 +73,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-4">
                                 <div class="col-2">
                                     <img src="{{ book.thumbnailUrl }}" class="card-img" style="width: 200px; height: 200px;" alt="Imagen no disponible">
                                 </div>
                                 <div class="col">
                                     <em class="card-text short-description">{{ book.shortDescription }}</em>
-                                    <p class="card-text">Fecha de publicación: {{ formattedPublishedDate }} </p>
                                 </div>
+                            </div>
+                            <div class="row d-flex justify-content-between">
+                                <p class="card-text">
+                                    <span class="py-2 px-3" style="background-color: darkgreen; color: white; font-weight: bold;">
+                                        Fecha de publicación: {{ book.formattedPublishedDate }}
+                                    </span>
+                                </p>
                             </div>
                         </div>
                     </div>

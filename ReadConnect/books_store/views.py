@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import datetime
+from dateutil import parser
 from django.http import JsonResponse
 from django.shortcuts import render
 import logging  # Add this import
@@ -40,13 +41,13 @@ def books_retrieve(request):
         if 'publishedDate' in item:
             try:
                 date_string = item['publishedDate']['$date']
-                date = datetime.fromisoformat(date_string)
+                date = parser.parse(date_string)
                 formatted_date = date.strftime("%b %Y")
                 item['formattedPublishedDate'] = formatted_date
             except (ValueError, KeyError):
                 # Handle invalid date formats or missing data
                 item['formattedPublishedDate'] = "Date Unavailable"
-                
+
     # Now, each element in the JSON data has a 'formattedPublishedDate' key
     # containing the short month and year format of the 'publishedDate'.
     return render(request, "books_store/index.html", context={"data": data})

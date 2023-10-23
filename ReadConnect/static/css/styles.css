@@ -766,3 +766,20 @@ abbr[title] {
     width: 85%;
     justify-content: center;
 }
+
+.bg-dark-green {
+    background-color: darkgreen;
+    color: white; /* To set the text color to white */
+    /* You can add other styles as needed */
+}
+
+.btn-custom {
+    background-color: darkorange;
+    color: white; /* Set the text color to white */
+    padding: 10px 20px; /* Add padding to the button (adjust as needed) */
+    border: 3px; /* Remove the button border */
+    border-radius: 5px; /* Add rounded corners (adjust as needed) */
+    cursor: pointer; /* Add a pointer cursor on hover */
+    /* You can add other styles as needed */
+    border: 2px solid darkred;
+}
