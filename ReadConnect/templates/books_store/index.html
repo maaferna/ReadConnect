@@ -1,15 +1,72 @@
 {% extends 'base.html' %}
+{% load static %}
+<script src="{% static 'js/scripts.js' %}"></script>
+
+
+{% load bootstrap5 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% load crispy_forms_tags %}
 
 {% block content %}
-{% load crispy_forms_tags %}
+
 <br>
 <br>
 
- <h1>Books List</h1>
-    <ul>
-        {% for book in data %}
-            <li>{{ book.title }}</li>
-        {% endfor %}
-    </ul>
+<section class="container-section mb-4">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="portfolio-box-caption">
+                <h1>Books List</h1>
+                <hr class="mb-4">
+                {% for book in data %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h2 class="card-title">{{ book.title }}</h2>
+                                    </div>
+                                    <div class="col-md-3 text-end">
+                                        <h5 class="card-subtitle mb-3">ISBN: {{ book.isbn }}</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="card-text">Authors: {{ book.authors }}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="card-text">Status: {{ book.status }}</p>
+                                    </div>
+                                    <div class="col">
+                                        <p class="card-text">N°Paginas: {{ book.pageCount }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-2">
+                                    <img src="{{ book.thumbnailUrl }}" class="card-img" style="width: 200px; height: 200px;" alt="Imagen no disponible">
+                                </div>
+                                <div class="col">
+                                    <em class="card-text short-description">{{ book.shortDescription }}</em>
+                                    <p class="card-text">Fecha de publicación: {{ formattedPublishedDate }} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
 
 {% endblock %}

@@ -1,15 +1,188 @@
+{% load static% }
+@charset "UTF-8";
+:root {
+  --bs-blue: #0d6efd;
+  --bs-section: rgba(39, 10, 0, 0.04);
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #f4623a;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-black: #000;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-gray-dark: #343a40;
+  --bs-gray-100: #f8f9fa;
+  --bs-gray-200: #e9ecef;
+  --bs-gray-300: #dee2e6;
+  --bs-gray-400: #ced4da;
+  --bs-gray-500: #adb5bd;
+  --bs-gray-600: #6c757d;
+  --bs-gray-700: #495057;
+  --bs-gray-800: #343a40;
+  --bs-gray-900: #212529;
+  --bs-primary: #f4623a;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-primary-rgb: 244, 98, 58;
+  --bs-secondary-rgb: 108, 117, 125;
+  --bs-success-rgb: 25, 135, 84;
+  --bs-info-rgb: 13, 202, 240;
+  --bs-warning-rgb: 255, 193, 7;
+  --bs-danger-rgb: 220, 53, 69;
+  --bs-light-rgb: 248, 249, 250;
+  --bs-dark-rgb: 33, 37, 41;
+  --bs-white-rgb: 255, 255, 255;
+  --bs-black-rgb: 0, 0, 0;
+  --bs-body-color-rgb: 33, 37, 41;
+  --bs-body-bg-rgb: 255, 255, 255;
+  --bs-font-sans-serif: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  --bs-body-font-family: Merriweather, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  --bs-body-font-size: 1rem;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 1.5;
+  --bs-body-color: #212529;
+  --bs-body-bg: #fff;
+  --bs-border-width: 1px;
+  --bs-border-style: solid;
+  --bs-border-color: #dee2e6;
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+  --bs-border-radius: 0.375rem;
+  --bs-border-radius-sm: 0.25rem;
+  --bs-border-radius-lg: 0.5rem;
+  --bs-border-radius-xl: 1rem;
+  --bs-border-radius-2xl: 2rem;
+  --bs-border-radius-pill: 50rem;
+  --bs-link-color: #f4623a;
+  --bs-link-hover-color: #c34e2e;
+  --bs-code-color: #d63384;
+  --bs-highlight-bg: #fff3cd;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+   font-family: var(--bs-body-font-family);
+   margin:0;
+   font-size: var(--bs-body-font-size);
+   font-weight: var(--bs-body-font-weight);
+   line-height: var(--bs-body-line-height);
+   color: var(--bs-body-color);
+   text-align: var(--bs-body-text-align);
+   background-color: var(--bs-body-bg);
+   -webkit-text-size-adjust: 100%;
+   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+   top: 0;
+}
+
+
+hr {
+  margin: 1rem 0;
+  color: inherit;
+  border: 0;
+  border-top: 1px solid;
+  opacity: 0.25;
+}
+
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+h1, .h1 {
+  font-size: calc(1.375rem + 1.5vw);
+}
+@media (min-width: 1200px) {
+  h1, .h1 {
+    font-size: 2.5rem;
+  }
+}
+
+h2, .h2 {
+  font-size: calc(1.325rem + 0.9vw);
+}
+@media (min-width: 1200px) {
+  h2, .h2 {
+    font-size: 2rem;
+  }
+}
+
+h3, .h3 {
+  font-size: calc(1.3rem + 0.6vw);
+}
+@media (min-width: 1200px) {
+  h3, .h3 {
+    font-size: 1.75rem;
+  }
+}
+
+h4, .h4 {
+  font-size: calc(1.275rem + 0.3vw);
+}
+@media (min-width: 1200px) {
+  h4, .h4 {
+    font-size: 1.5rem;
+  }
+}
+
+h5, .h5 {
+  font-size: 1.25rem;
+}
+
+h6, .h6 {
+  font-size: 1rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+abbr[title] {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+  cursor: help;
+  -webkit-text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+}
+
+
 .row-header {
     margin: 0px auto;
     padding: 0px 0px;
   }
-  
+
   .row-header .h1 {
     font-size: 300%;
     text-align: left;
     font-weight: bold;
     padding-top: 10%;
   }
-  
+
   .row-content {
     margin: 0px auto;
     padding: 50px 0px;
@@ -17,49 +190,49 @@
     min-height: 400px;
     text-align: center;
   }
-  
+
   body {
      font-family: 'Karla', sans-serif;
      margin:0;
      padding:50px 0px 0px 0px;
      z-index: 0;
   }
-  
+
   header{
       text-align: left;
       padding: 0;
       margin: 0;
   }
-  
+
   header img {
       margin-left: auto;
       margin-right: auto;
       width:100%
   }
-  
+
   address {
     font-size: 80%;
     margin: 0px;
     color: rgba(87, 111, 114, 0.8);
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
       font-family: 'Markazi Text', serif;
       letter-spacing: 2px;;
   }
-  
+
   .h1 {
       font-size: 4rem;
       margin-top: 1.5rem;
       margin-bottom: 0;
   }
-  
+
   .h2 {
       font-size: 2.5rem;
       color: white;
       margin:1rem 0;
   }
-  
+
   .post-blog {
        justify-content: space-between;
        color: #403054;
@@ -75,17 +248,17 @@
   .post-blog p {
       margin: 20px 50px 20px 50px;
   }
-  
+
   a {
       color: #EE9972;
       text-decoration: none;
   }
-  
+
   a:hover {
       text-decoration: underline;
   }
-  
-  
+
+
   section {
       display: flex;
       gap: 2rem 1rem;
@@ -93,15 +266,15 @@
       margin-bottom: 1rem;
       flex-direction: row;
   }
-  
+
   article {
       flex:1;
   }
-  
+
   article img {
       max-width: 100%;
   }
-  
+
   .breadcrumb ol {
       display: flex;
       flex-wrap: wrap;
@@ -110,15 +283,15 @@
       margin: 0;
       color: #ded5d2;
   }
-  
+
   .breadcrumb ol a {
       color: #fe825a;
   }
-  
+
   .breadcrumb ol li+li {
       padding-left: 10px;
   }
-  
+
   .breadcrumb ol li+li::before {
       display: inline-block;
       padding-right: 10px;
@@ -132,30 +305,30 @@
     height: 300px;
     width: 500px;
   }
-  
+
   article ul {
       list-style: none;
   }
-  
+
   main {
     margin: 0px;
   }
-  
+
   main article {
       border: 1px solid #EDEFEE;
       padding-left: 1rem;
       padding-right: 1rem;
   }
-  
+
   figure {
       margin: 0;
   }
-  
+
   label {
       font-weight: bold;
       display: block;
     }
-  
+
   input{
       width: 80%;
       display: block;
@@ -163,7 +336,7 @@
       line-height: 1.5rem;
       box-sizing: border-box;
   }
-  
+
   #button {
       padding: .5rem 1rem;
       border: 1px solid #495E57;
@@ -175,7 +348,7 @@
       color: #fff;
       line-height: 25px;
     }
-  
+
   #hero {
       background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url('../img/restaurant_inside.jpg');
       background-size: cover;
@@ -184,41 +357,41 @@
       min-height: 200px;
       text-align: center;;
   }
-  
+
   #hero p {
       font-size: 2rem;
       margin:0;
       text-shadow: 2px 2px 4px #333333;
   }
-  
-  .cta { 
-      display: inline-block; 
+
+  .cta {
+      display: inline-block;
       color: rgba(255, 255, 255, 0.9);
-      width: 200px; 
-      font-weight: bold; 
+      width: 200px;
+      font-weight: bold;
       font-size: 1.5rem;
-      padding: 8px; 
-      border: 3px solid #fff; 
-      text-align: center; 
-      outline: none; 
-      text-decoration: none; 
+      padding: 8px;
+      border: 3px solid #fff;
+      text-align: center;
+      outline: none;
+      text-decoration: none;
       margin: 1rem;
-  } 
-  
+  }
+
   .cta:hover {
       color:#fff;
       background:#495E57;
-      border: 3px solid #495E57; 
+      border: 3px solid #495E57;
     }
-  
+
     .heading-shadow {
       text-shadow: 1px 1px 4px #333333;
     }
-  
+
   .container-fluid {
       background-color: rgba(125, 157, 156, 0.5);
   }
-  
+
   .footer {
       background-color: rgba(125, 157, 156, 0.5);
       clear: both;
@@ -227,12 +400,12 @@
       margin-top: -200px;
       padding: 20px 0px 20px 0px;
   }
-  
+
   .footer img {
       max-width: 50%;
   }
-  
-  
+
+
   .footer p {
       border-top: #333333;
       border-style: solid;
@@ -243,30 +416,30 @@
       text-align: right;
       padding-top: 1rem;;
   }
-  
+
   @media (max-width: 800px) {
       section {
-          flex-direction: column;   
+          flex-direction: column;
       }
-  
+
       .row {
           flex-direction: column;
           width: 100%;
         }
-     
+
       input{
           width: 100%;
       }
-  
+
       #button{
           width: 100%;
       }
     }
-  
+
    * {box-sizing: border-box;}
-  
+
   /* Style the navbar */
-  
+
   .navbar-brand {
     color: #fff !important;
     text-align: center;
@@ -279,11 +452,11 @@
       padding: 0;
       margin: 0;
   }
-  
+
   navbar img{
       width:100%
   }
-  
+
   /* Navbar links */
   .nav-item a {
     float: left;
@@ -295,7 +468,7 @@
     font-size: 1.5em;
     transition: 0.5s background-color;
   }
-  
+
   .navbar-text i {
     float: left;
     display: block;
@@ -306,21 +479,21 @@
     font-size: 1.5em;
     transition: 0.5s background-color;
   }
-  
+
   /* Navbar links on mouse-over */
   .nav-item a:hover, nav-item span {
     background-color: #74e9e9;
     color: #444;
   }
-  
-  
+
+
   /* Active/current link */
   .nav-item a.active {
     background-color: #f6e5e5;
     color: #444;
     cursor: default;
   }
-  
+
   /* Sub Menus */
   nav-item li li {
     font-size: .8em;
@@ -344,12 +517,12 @@
   nav-item li ul li {
     display: block;
   }
-  
+
   /* Style the input container */
   .topnav .login-container {
     float: right;
   }
-  
+
   /* Style the input field inside the navbar */
   .topnav input[type=text] {
     padding: 6px;
@@ -358,7 +531,7 @@
     border: none;
     width: 150px; /* adjust as needed (as long as it doesn't break the topnav) */
   }
-  
+
   /* Style the button inside the input container */
   .topnav .login-container button {
     float: right;
@@ -370,11 +543,11 @@
     border: none;
     cursor: pointer;
   }
-  
+
   .topnav .login-container button:hover {
     background: #ccc;
   }
-  
+
   /* Add responsiveness - On small screens, display the navbar vertically instead of horizontally */
   @media screen and (max-width: 600px) {
     .navbar .login-container {
@@ -391,52 +564,52 @@
       border: 1px solid #ccc;
     }
   }
-  
+
   .li .dropdown-item {
       color: blue;
   }
-  
+
   .show-read-more .more-text{
          display: none;
       }
   .show-read-more .more-text p{
       align: justify;
       }
-  
+
   .specialization-detail {
       border:1px solid #ccc;
       margin-top: 30px;
       margin-bottom: 30px;
   }
-  
+
   #mycarousel span {
     height: 30%;
     top: 25%;
     width: 30%;
     background-color: rgba(240, 240, 242, 0.9);
   }
-  
+
   .carousel-inner {
       background: rgba(7, 7, 32, 0.5);
   }
   .carousel-item {
       margin-left: 10%;
   }
-  
+
   .carousel-item .object {
     background-size: cover;
     box-shadow: 0 0 140px 10px rgba(0, 0, 0, 0.5);
   }
-  
-  
+
+
   #carouselButton {
     right: 0px;
     position: absolute;
     bottom: 0px;
     z-index: 1;
   }
-  
-  
+
+
   .carousel-indicators .btn-option {
       border: 1px solid #495E57;
       background-color: #ccc;
@@ -448,55 +621,55 @@
       overflow:auto;
       padding-right: 10px;
   }
-  
-  
+
+
   .embed-responsive-item  {
       height:500px;
       width: 500px;
       object-fit: cover;
       object-position: 50% 50%;
   }
-  
+
   .mt-0 {
     margin-top: 0 !important;
   }
-  
+
   .ml-1 {
     margin-left: ($spacer * .25) !important;
   }
-  
+
   .px-2 {
     padding-left: ($spacer * .5) !important;
     padding-right: ($spacer * .5) !important;
   }
-  
+
   .p-3 {
     padding: $spacer !important;
   }
-  
-  
+
+
   * {
     margin: 0;
     padding: 0;
   }
-  
+
   .top-bar {
     background: #333;
     color: #fff;
     padding: 1rem;
   }
-  
-  
+
+
   .page-info {
     margin-left: 1rem;
   }
-  
+
   .error {
     background: orangered;
     color: #fff;
     padding: 1rem;
   }
-  
+
   .avatar {
     height: 3rem;
     width: 3rem;
@@ -505,9 +678,9 @@
     margin-right: 1em;
     margin-bottom: 8px;
   }
-  
+
   .jumbotron {
-     background-image: url('https://portfolio-mparraf.herokuapp.com/static/img/jumbotron-image.jpg');
+    background-image: url('/static/img/jumbotron.jpg');
      background-size: cover;
      color:rgba(241, 238, 238, 0.951) !important;
      -webkit-background-size: cover;
@@ -515,22 +688,11 @@
      -o-background-size: contain;
      background-color: rgba(0, 0, 0, 0.6);
   }
-  
-  .jumbotron-movies {
-     background-image: url('/static/img/jumbotron-movies.jpg');
-     background-size: cover;
-     color:rgba(241, 238, 238, 0.951) !important;
-     -webkit-background-size: cover;
-     -moz-background-size: cover;
-     -o-background-size: contain;
-     background-color: rgba(0, 0, 0, 0.6);
-  }
-  
-  
+
   .subsection {
       margin-left: 1em;
   }
-  
+
   .img-container{
       height:100px;
       width: 100%;
@@ -540,16 +702,16 @@
       background-repeat: no-repeat;
       background-position: right top;
        }
-  
+
   @-webkit-keyframes animate-stripes {
      100% { background-position: -100px 0px; }
   }
-  
+
   @keyframes animate-stripes {
      100% { background-position: -100px 0px; }
   }
-  
-  
+
+
   #progressBar {
     background-color: hsla(0, 0%, 0%, 0.2);
     border-radius: 2px;
@@ -557,19 +719,19 @@
     -webkit-animation: animate-stripes 5s linear infinite;
           animation: animate-stripes 5s linear infinite;
   }
-  
+
   @media only screen and (min-width:780px) {
     h1{
       width: 50%;
     }
   }
-  
+
   @media only screen and (min-width:1024px) {
     h1{
       width: 75%;
     }
   }
-  
+
   .loading-spinner{
     position:relative;
     display:block;
@@ -595,4 +757,12 @@
     border-top-color: #333;
     animation: spinner 1s linear infinite;
   }
-  
+
+
+.container-section {
+    align-items: center;
+    padding:10px;
+    margin: 0 auto;
+    width: 85%;
+    justify-content: center;
+}
