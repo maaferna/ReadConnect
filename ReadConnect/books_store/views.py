@@ -170,6 +170,53 @@ def books_retrieve(request):
                 # Handle invalid date formats or missing data
                 item['formattedPublishedDate'] = "Date Unavailable"
 
+    #Sort by section
+    sort_by = request.GET.get('sort_by')
+    sort_order = request.GET.get('sort_order')
+
+    # Sort the data based on the selected criterion
+    # Create a mapping from predefined values to sorting criteria
+    sorting_criteria = {
+        'title_sort': 'title',
+        'pageCount_sort': 'pageCount',
+        'publishedDate_sort': 'publishedDate',
+    }
+
+
+    # Sort the data based on the selected criterion
+    if sort_by in sorting_criteria:
+        criterion = sorting_criteria[sort_by]
+
+        # Function to extract the key for sorting
+        def get_sort_key(item):
+            if criterion == 'publishedDate':
+                date_info = item.get(criterion, {})
+                date_str = date_info.get('$date', '')
+
+                if date_str:
+                    # Parse the date string to a datetime object
+                    try:
+                        date = parser.parse(date_str)
+                    except ValueError:
+                        # Handle invalid date strings with a default minimum date
+                        date = datetime.min.replace(tzinfo=pytz.UTC)
+                else:
+                    # Handle cases where 'publishedDate' is missing or invalid
+                    date = datetime.min.replace(tzinfo=pytz.UTC)
+
+                return date
+            elif criterion == 'title':
+                return item.get(criterion, '')
+            elif criterion == 'pageCount':
+                return item.get(criterion, 0)
+
+        data.sort(key=get_sort_key)
+
+        # Determine the sorting order (ascending or descending)
+        if sort_order == 'desc':
+            data.reverse()
+
+
     # Now, each element in the JSON data has a 'formattedPublishedDate' key
     # containing the short month and year format of the 'publishedDate'.
     context = {"data": data, 'filters_values': filters_values,
