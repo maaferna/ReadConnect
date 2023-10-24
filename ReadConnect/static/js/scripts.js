@@ -1,57 +1,67 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const showMoreButtons = document.querySelectorAll(".show-more-btn");
+    const modal = document.getElementById("bookModal");
+    const modalContent = document.getElementById("bookDetails");
 
-    showMoreButtons.forEach((button) => {
-        button.addEventListener("click", function() {
-            const targetId = button.getAttribute("data-target");
-            const longDescription = document.querySelector(`[data-target="${targetId}"]`);
+    const buttons = document.querySelectorAll(".open-modal-button");
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const bookISBN = button.getAttribute("data-book-isbn");
 
-            if (longDescription.classList.contains("d-none")) {
-                longDescription.classList.remove("d-none");
-                button.textContent = "Show Less";
-            } else {
-                longDescription.classList.add("d-none");
-                button.textContent = "Show More";
-            }
+            // Send an AJAX request to retrieve book details by ISBN
+            fetch(`/get_book_details/${bookISBN}/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Check the actual structure of the data
+                    console.log(data);
+
+                    // Access the book data and author names based on the response structure
+                    const book = data; // Adjust based on the actual structure
+                    const authors = book.authors.join(', '); // Adjust based on the actual structure
+
+                    // Update modalContent with book details
+                    modalContent.innerHTML = `
+                        <div class="modal-header">
+                            <h2 class="modal-title">${book.fields.title}</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                 <p>${book.fields.longDescription}</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <p><strong>Authors:</strong> ${authors}</p>
+                                    <p><strong>Status:</strong> ${book.fields.status}</p>
+                                    <p><strong>Number of Pages:</strong> ${book.fields.pageCount}</p>
+                                    <p><strong>ISBN:</strong> ${book.fields.isbn}</p>
+                                </div>
+                                <div class="col">
+                                    <img src="${book.fields.thumbnailUrl}" class="card-img" style="width: 200px; height: 200px;" alt="Imagen no disponible">
+                                </div>
+                            </div
+                        </div>
+                    `;
+                    modal.style.display = "block";
+                })
+                .catch(error => {
+                    console.error("Error fetching book details:", error);
+                });
         });
     });
-});
 
-// JavaScript to handle opening the modal
-const modal = document.getElementById("bookModal");
-const modalContent = document.getElementById("bookDetails");
+    const closeButton = document.querySelector(".close");
+    closeButton.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
 
-// Add an event listener to all the buttons with class "open-modal-button"
-const buttons = document.querySelectorAll(".open-modal-button");
-buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-        const bookId = button.getAttribute("data-book-id");
-
-        // Send a request to retrieve book details by ID and populate modalContent
-        // You will need to create a view in your Django application for this purpose
-        fetch(`/get_book_details/${bookId}/`) // Replace with your actual URL
-            .then(response => response.json())
-            .then(data => {
-                // Update modalContent with book details
-                modalContent.innerHTML = `<h2>${data.title}</h2><p>${data.description}</p>`;
-                modal.style.display = "block";
-            })
-            .catch(error => {
-                console.error("Error fetching book details:", error);
-            });
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
     });
 });
 
-// Close the modal when the close button is clicked
-const closeButton = document.querySelector(".close");
-closeButton.addEventListener("click", () => {
-    modal.style.display = "none";
-});
 
-// Close the modal if the user clicks outside of it
-window.addEventListener("click", (event) => {
-    if (event.target === modal) {
-        modal.style.display = "none";
-    }
-});
+
+
 

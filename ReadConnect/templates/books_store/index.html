@@ -212,7 +212,7 @@
                                     </span>
                                 </p>
                                 <div class="center-button">
-                                    <button class="open-modal-button" style="height: 3rem; width: 25%;" data-book-id="{{ book.id }}">Ver Detalle</button>
+                                    <button class="open-modal-button" style="height: 3rem; width: 25%;" data-book-isbn="{{ book.isbn }}">Ver Detalle</button>
                                 </div>
                             </div>
                         </div>
@@ -226,23 +226,18 @@
 </section>
 
 
-<section class="container-section mb-4">
-    <div class="container-fluid">
-        <div class="row g-0">
-            <div class="portfolio-box-caption">
-                <div id="bookModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <div id="bookDetails">
-                            <!-- Book details will be displayed here -->
-                        </div>
-                    </div>
-                </div>
+<div class="container">
+    <div id="bookModal" class="modal custom-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="bookDetails">
+                <!-- Book details will be displayed here -->
             </div>
         </div>
     </div>
-</section>
+</div>
 
-<script src="{% static 'js/scripts.js' %}"></script>
+
+
 
 {% endblock %}

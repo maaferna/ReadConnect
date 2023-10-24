@@ -7,8 +7,11 @@ from dateutil import parser
 from django.http import JsonResponse
 from django.shortcuts import render
 import logging  # Add this import
+from django.core import serializers
+
 from .utils import *
 from .forms import *
+from .models import *
 # Set up a logger
 logger = logging.getLogger(__name__)
 
@@ -231,14 +234,20 @@ def books_retrieve(request):
     return render(request, "books_store/index.html", context)
 
 
-def get_book_details(request, book_id):
+def get_book_details(request, book_isbn):
     try:
-        book = Book.objects.get(id=book_id)
-        data = {
-            "title": book.title,
-            "description": book.description,
-            # Add more book details as needed
-        }
-        return JsonResponse(data)
+        book = Book.objects.get(isbn=book_isbn)
+
+        # Serialize the book object, including the related authors and categories
+        data = serializers.serialize('json', [book], use_natural_primary_keys=True)
+
+        # Convert the serialized data to a list of dictionaries
+        book_data = json.loads(data)[0]
+
+        # Add author names and category names to the book data
+        book_data['authors'] = [author.name for author in book.authors.all()]
+        book_data['categories'] = [category.name for category in book.categories.all()]
+
+        return JsonResponse(book_data)
     except Book.DoesNotExist:
         return JsonResponse({"error": "Book not found"}, status=404)
