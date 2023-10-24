@@ -16,7 +16,8 @@ from dotenv import load_dotenv, find_dotenv
 import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -50,7 +51,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'crispy_forms',
     'rest_framework',
-    'books_store.apps.AppNameConfig', #update this line with real name of apps, see in directory of initial app the apps.py file.
+    'books_store.apps.BooksStoreConfig',
     'registration.apps.RegistrationConfig',
     'allauth.socialaccount.providers.linkedin',
     'allauth.socialaccount.providers.google',

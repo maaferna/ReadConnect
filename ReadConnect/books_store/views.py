@@ -230,3 +230,15 @@ def books_retrieve(request):
                'unique_statuses': unique_statuses }
     return render(request, "books_store/index.html", context)
 
+
+def get_book_details(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+        data = {
+            "title": book.title,
+            "description": book.description,
+            # Add more book details as needed
+        }
+        return JsonResponse(data)
+    except Book.DoesNotExist:
+        return JsonResponse({"error": "Book not found"}, status=404)

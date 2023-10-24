@@ -783,3 +783,13 @@ abbr[title] {
     /* You can add other styles as needed */
     border: 2px solid darkred;
 }
+
+
+.center-button {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100%; /* Ensure the parent div expands to fill available space */
+}
+
+
