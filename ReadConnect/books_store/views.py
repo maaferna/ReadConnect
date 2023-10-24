@@ -8,6 +8,10 @@ from django.http import JsonResponse
 from django.shortcuts import render
 import logging  # Add this import
 from django.core import serializers
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
+from .forms import BookStatusForm
 
 from .utils import *
 from .forms import *
@@ -251,3 +255,32 @@ def get_book_details(request, book_isbn):
         return JsonResponse(book_data)
     except Book.DoesNotExist:
         return JsonResponse({"error": "Book not found"}, status=404)
+
+@login_required
+@require_POST
+def update_book_status(request, book_isbn):
+    # Get the book instance based on the ISBN
+    try:
+        book = Book.objects.get(isbn=book_isbn)
+    except Book.DoesNotExist:
+        return JsonResponse({"error": "Book not found"}, status=404)
+
+    user = request.user  # Assuming you have a logged-in user
+
+    form = BookStatusForm(request.POST)
+
+    if form.is_valid():
+        # Get or create a UserBookStatus instance for the user and book
+        user_book_status, created = UserBookStatus.objects.get_or_create(
+            user=user,
+            book=book
+        )
+
+        # Update the book status based on the form data
+        user_book_status.currently_reading = form.cleaned_data.get('currently_reading', True)
+        user_book_status.want_to_read = form.cleaned_data.get('want_to_read', True)
+        user_book_status.save()
+
+        return JsonResponse({"success": "Book status updated successfully"})
+    else:
+        return JsonResponse({"error": "Invalid form data"}, status=400)

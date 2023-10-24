@@ -214,6 +214,28 @@
                                 <div class="center-button">
                                     <button class="open-modal-button" style="height: 3rem; width: 25%;" data-book-isbn="{{ book.isbn }}">Ver Detalle</button>
                                 </div>
+                                <div class="row">
+                                    {% if book.isbn %}
+                                  <form method="POST" action="{% url 'update_book_status' book.isbn %}">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="currentlyReading{{ book.isbn }}" name="currently_reading" value="true">
+                                                <label class="form-check-label" for="currentlyReading{{ book.isbn }}">Currently Reading</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="wantToRead{{ book.isbn }}" name="want_to_read" value="true">
+                                                <label class="form-check-label" for="wantToRead{{ book.isbn }}">Want to Read</label>
+                                            </div>
+                                            <div class="center-button">
+                                                <button type="submit" style="height: 3rem; width: 25%;">Update Status</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    {% else %}
+                                        <p>Invalid ISBN for this book.</p>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>

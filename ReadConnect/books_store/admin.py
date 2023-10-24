@@ -21,3 +21,7 @@ class AuthorAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
+
+@admin.register(UserBookStatus)
+class UserBookStatusAdmin(admin.ModelAdmin):
+    list_display = ('id', 'currently_reading', 'want_to_read')
