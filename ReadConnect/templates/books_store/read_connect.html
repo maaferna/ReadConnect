@@ -165,7 +165,7 @@
                     </div>
                 </div>
 
-                <hr class="mb-4">
+                <hr>
                 {% for book in data %}
                 <div class="row mb-4">
                     <div class="col-12">
@@ -256,24 +256,52 @@
                                         <p>Invalid ISBN for this book.</p>
                                     </div>
                                 {% endif %}
-                            </div>
-                            <div class="row">
-                                <p>
-                                {% if book.title in userbookstatus_titles_want_to_read %}
-                                    This book is marked as "Want to Read" by you.
-                                {% elif book.title in userbookstatus_titles_currently_reading %}
-                                    This book is marked as "Currently Reading" by you.
-                                {% else %}
+                                <div class="row">
+                                    <p>
+                                    {% if book.title in userbookstatus_titles_want_to_read %}
+                                        This book is marked as "Want to Read" by you.
+                                    {% elif book.title in userbookstatus_titles_currently_reading %}
+                                        This book is marked as "Currently Reading" by you.
+                                    {% else %}
 
-                                {% endif %}
-                                </p>
+                                    {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-8">
+                                    <div class="card p-3 border rounded shadow">
+                                        <h4>Rate and Comment:</h4>
+                                        <form method="POST" action="{% url 'create_book_rating' book.isbn %}">
+                                            {% csrf_token %}
+                                            <div class="row mb-3">
+                                                <div class="col-3">
+                                                    <label for="rating" class="form-label">Rating:</label>
+                                                    <select class="form-select" id="rating" name="new_rating">
+                                                        <option value="">Select Rating</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-9">
+                                                    <label for="comment" class="form-label">Comment:</label>
+                                                    <textarea class="form-control" id="comment" name="new_comment" rows="3" placeholder="Enter your comment"></textarea>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Submit Rating and Comment</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <hr>
                 {% endfor %}
-                <div class="row">
+                <div class="row" >
                     <nav style="--bs-breadcrumb-divider: '/'" aria-label="breadcrumb">
                         <div class="breadcrumb">
                             <ol>
@@ -287,6 +315,7 @@
                         </div>
                     </nav>
                 </div>
+                <hr>
             </div>
         </div>
     </div>

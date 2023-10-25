@@ -25,3 +25,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(UserBookStatus)
 class UserBookStatusAdmin(admin.ModelAdmin):
     list_display = ('id', 'currently_reading', 'want_to_read')
+
+@admin.register(BookRating)
+class BookRatingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'book', 'rating', 'comment', 'timestamp')

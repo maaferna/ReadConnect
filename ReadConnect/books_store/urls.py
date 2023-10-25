@@ -7,4 +7,7 @@ urlpatterns = [
     path('get_book_details/<int:book_isbn>/', get_book_details, name='get_book_details'),
     path('read_connect_books/', read_connect_books, name='read_connect_books'),
     path('update_book_status/<str:book_isbn>/', update_book_status, name='update_book_status'),
+    path('update_book_rating/<str:book_isbn>/', update_book_rating, name='update_book_rating'),
+    path('create_book_rating/<int:book_isbn>/', create_book_rating, name='create_book_rating'),
+
 ]

@@ -4,15 +4,15 @@ import requests
 from datetime import datetime
 import pytz
 from dateutil import parser
-from django.http import JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
 import logging  # Add this import
 from django.core import serializers
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from django.template.loader import render_to_string
 from .forms import BookStatusForm
 
 from .utils import *
@@ -428,9 +428,77 @@ def read_connect_books(request):
     except EmptyPage:
         book_list = paginator.page(paginator.num_pages)
 
+    book_list_html = render_to_string('books_store/read_connect.html', {'data': book_list})
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+        # Your AJAX-specific code here
+        return HttpResponse(book_list_html)
+
     context = {'data': book_list, 'filters_values': filters_values, 'page': page,
                'userbookstatus_titles_want_to_read': userbookstatus_titles_want_to_read,
                'userbookstatus_titles_currently_reading': userbookstatus_titles_currently_reading,
                }
 
     return render(request, "books_store/read_connect.html", context)
+
+@login_required
+@require_POST
+def create_book_rating(request, book_isbn):
+    if request.method == 'POST':
+        new_rating = request.POST.get('new_rating')
+        new_comment = request.POST.get('new_comment')
+
+        # Validate the data
+        if not new_rating:
+            return redirect('get_book_details', isbn=book_isbn)
+
+        # Retrieve the book based on ISBN (assuming you have a Book model)
+        try:
+            book = Book.objects.get(isbn=book_isbn)
+        except Book.DoesNotExist:
+            # Handle the case where the book doesn't exist
+            return redirect('get_book_details', isbn=book_isbn)
+
+        # Create a new BookRating instance
+        book_rating, created = BookRating.objects.get_or_create(
+            user=request.user,  # Assuming you have user authentication
+            book=book,
+            defaults={'rating': new_rating},
+        )
+
+        # Update the comment if provided
+        if new_comment:
+            book_rating.comment = new_comment
+            book_rating.save()
+
+        return redirect('get_book_details', isbn=book_isbn)
+
+    return redirect('get_book_details', isbn=book_isbn)
+
+@login_required
+@require_POST
+def update_book_rating(request, book_isbn):
+    try:
+        book_rating = BookRating.objects.get(user=request.user, book_id=book_id)
+    except BookRating.DoesNotExist:
+        return JsonResponse({'error': 'Rating does not exist for this book.'}, status=400)
+
+    new_rating = request.POST.get('new_rating')
+    new_comment = request.POST.get('new_comment')
+
+    if new_rating and new_comment:
+        # Update the rating and comment
+        book_rating.update_rating(new_rating, new_comment)
+        return JsonResponse({'message': 'Rating and comment updated successfully.'})
+    elif new_rating:
+        # Update only the rating
+        book_rating.rating = new_rating
+        book_rating.save()
+        return JsonResponse({'message': 'Rating updated successfully.'})
+    elif new_comment:
+        # Update only the comment
+        book_rating.comment = new_comment
+        book_rating.save()
+        return JsonResponse({'message': 'Comment updated successfully.'})
+    else:
+        return JsonResponse({'error': 'No data provided for update.'}, status=400)

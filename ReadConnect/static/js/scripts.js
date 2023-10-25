@@ -61,7 +61,49 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+ (document).ready(function() {
+        // Add change event listeners to filter form fields
+        $('#author_name, #title, #category, #status, #start_date, #end_date, #start_page, #end_page, #sort_by, #sort_order').on('change', function() {
+            updateBookList();
+        });
 
+        // Function to update the book list
+        function updateBookList() {
+            // Gather filter values
+            var author_name = $('#author_name').val();
+            var title = $('#title').val();
+            var category = $('#category').val();
+            var status = $('#status').val();
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
+            var start_page = $('#start_page').val();
+            var end_page = $('#end_page').val();
+            var sort_by = $('#sort_by').val();
+            var sort_order = $('#sort_order').val();
+
+            // Send an AJAX request to update the book list
+            $.ajax({
+                url: '{% url "read_connect_books" %}',
+                type: 'GET',
+                data: {
+                    'author_name': author_name,
+                    'title': title,
+                    'category': category,
+                    'status': status,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'start_page': start_page,
+                    'end_page': end_page,
+                    'sort_by': sort_by,
+                    'sort_order': sort_order
+                },
+                success: function(data) {
+                    // Update the book list with the response data
+                    $('#book-list-container').html(data);
+                }
+            });
+        }
+    });
 
 
 
