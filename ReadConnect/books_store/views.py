@@ -10,12 +10,14 @@ import logging  # Add this import
 from django.core import serializers
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from .forms import BookStatusForm
 
 from .utils import *
 from .forms import *
 from .models import *
+
 # Set up a logger
 logger = logging.getLogger(__name__)
 
@@ -83,7 +85,8 @@ def books_retrieve(request):
         filters_values.append('')
 
     if categories:
-        data = [item for item in data if any(category.lower() in " ".join(item.get("categories", [])).lower() for category in categories)]
+        data = [item for item in data if
+                any(category.lower() in " ".join(item.get("categories", [])).lower() for category in categories)]
         filters_values.append(category_filter)
     else:
         filters_values.append('')
@@ -182,7 +185,7 @@ def books_retrieve(request):
                 # Handle invalid date formats or missing data
                 item['formattedPublishedDate'] = "Date Unavailable"
 
-    #Sort by section
+    # Sort by section
     sort_by = request.GET.get('sort_by')
     sort_order = request.GET.get('sort_order')
     filters_values.append(sort_by)
@@ -195,7 +198,6 @@ def books_retrieve(request):
         'pageCount_sort': 'pageCount',
         'publishedDate_sort': 'publishedDate',
     }
-
 
     # Sort the data based on the selected criterion
     if sort_by in sorting_criteria:
@@ -230,11 +232,10 @@ def books_retrieve(request):
         if sort_order == 'desc':
             data.reverse()
 
-
     # Now, each element in the JSON data has a 'formattedPublishedDate' key
     # containing the short month and year format of the 'publishedDate'.
     context = {"data": data, 'filters_values': filters_values,
-               'unique_statuses': unique_statuses }
+               'unique_statuses': unique_statuses}
     return render(request, "books_store/index.html", context)
 
 
@@ -255,6 +256,7 @@ def get_book_details(request, book_isbn):
         return JsonResponse(book_data)
     except Book.DoesNotExist:
         return JsonResponse({"error": "Book not found"}, status=404)
+
 
 @login_required
 @require_POST
@@ -284,3 +286,145 @@ def update_book_status(request, book_isbn):
         return JsonResponse({"success": "Book status updated successfully"})
     else:
         return JsonResponse({"error": "Invalid form data"}, status=400)
+
+
+@login_required
+def read_connect_books(request):
+    # Get the query parameters from the request
+    author_name = request.GET.get('author_name')
+    title = request.GET.get('title')
+    category = request.GET.get('category')
+    status = request.GET.get('status')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    start_page = request.GET.get('start_page')
+    end_page = request.GET.get('end_page')
+    sort_by = request.GET.get('sort_by')
+    sort_order = request.GET.get('sort_order')
+
+    # Create a dictionary with the filter values
+    filters_values = {
+        'author_name': author_name,
+        'title': title,
+        'category': category,
+        'status': status,
+        'start_date': start_date,
+        'end_date': end_date,
+        'start_page': start_page,
+        'end_page': end_page,
+        'sort_by': sort_by,
+        'sort_order': sort_order,
+    }
+    '''
+    # Create a dictionary to hold the filter criteria
+    filters = {}
+    
+    
+    add_filter(filters, 'authors__name__icontains', author_name)
+    add_filter(filters, 'title__icontains', title)
+    add_filter(filters, 'categories__name__icontains', category)
+    add_filter(filters, 'status', status)
+    add_filter(filters, 'publishedDate', start_date, 'gte')
+    add_filter(filters, 'publishedDate', end_date, 'lte')
+
+    if start_page is not None:
+        try:
+            start_page = int(start_page)
+            add_filter(filters, 'pageCount', start_page, 'gte')
+        except ValueError:
+            pass
+
+    if end_page is not None:
+        try:
+            end_page = int(end_page)
+            add_filter(filters, 'pageCount', end_page, 'lte')
+        except ValueError:
+            pass
+    '''
+    # Use the filter criteria to retrieve books
+    # Define default values for each filter
+    default_status = "PUBLISH"
+    default_start_date = "1900-10-01T00:00:00.000-0700"
+    default_end_date = "2023-10-01T00:00:00.000-0700"
+    default_start_page = 100  # Set your desired default value
+    default_end_page = 1000  # Set your desired default value
+
+    # Initialize an empty Q object to build the query
+    query = Q()
+    # Check if the query parameters are empty or None, and assign defaults
+    if author_name:
+        query &= Q(authors__name__icontains=author_name)
+
+    if title:
+        query &= Q(title__icontains=title)
+
+    if category:
+        query &= Q(categories__name__icontains=category)
+
+    if status:
+        query &= Q(status=status)
+    else:
+        query &= Q(status=default_status)
+
+    if start_date:
+        query &= Q(publishedDate__gte=start_date)
+    else:
+        query &= Q(publishedDate__gte=default_start_date)
+
+    if end_date:
+        query &= Q(publishedDate__lte=end_date)
+    else:
+        query &= Q(publishedDate__lte=default_end_date)
+
+    if start_page is not None:
+        try:
+            start_page = int(start_page)
+            query &= Q(pageCount__gte=start_page)
+        except (ValueError, TypeError):
+            pass
+    else:
+        query &= Q(pageCount__gte=default_start_page)
+
+    if end_page is not None:
+        try:
+            end_page = int(end_page)
+            query &= Q(pageCount__lte=end_page)
+        except (ValueError, TypeError):
+            pass
+    else:
+        query &= Q(pageCount__lte=default_end_page)
+
+    # Other option to make the filters
+    # books = Book.objects.filter(**filters).order_by(sort_by if sort_order == 'asc' else f"-{sort_by}")
+
+    # Default values for sort_by and sort_order
+    # Get the 'sort_by' parameter from the request, or use a default value
+    sort_by = request.GET.get('sort_by', 'title')  # 'title' is the default field to sort by if not provided
+
+    # Get the 'sort_order' parameter from the request, or use a default value
+    sort_order = request.GET.get('sort_order', 'asc')  # 'asc' is the default sort order if not provided
+
+    # Ensure 'sort_by' is a valid field for sorting
+    valid_sort_fields = ['title', 'pageCount', 'publishedDate']
+    if sort_by not in valid_sort_fields:
+        sort_by = 'title'  # Set a default value if 'sort_by' is invalid
+
+    # Now you can use 'sort_by' and 'sort_order' in your query
+    # Use the Q object to filter books
+    books = Book.objects.filter(query).order_by(sort_by if sort_order == 'asc' else f"-{sort_by}")
+
+    # Get all UserBookStatus instances for the current user
+    user = request.user
+    userbookstatus_want_to_read = UserBookStatus.objects.filter(user=user, want_to_read=True)
+    userbookstatus_titles_want_to_read = [status.book.title for status in userbookstatus_want_to_read]
+
+    # Get all UserBookStatus instances for the current user marked as "Currently Reading"
+    userbookstatus_currently_reading = UserBookStatus.objects.filter(user=user, currently_reading=True)
+    userbookstatus_titles_currently_reading = [status.book.title for status in userbookstatus_currently_reading]
+
+    context = {'data': books, 'filters_values': filters_values,
+               'userbookstatus_titles_want_to_read': userbookstatus_titles_want_to_read,
+               'userbookstatus_titles_currently_reading': userbookstatus_titles_currently_reading,
+               }
+
+    return render(request, "books_store/read_connect.html", context)

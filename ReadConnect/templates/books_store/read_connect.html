@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% load static %}
+<script src="{% static 'js/scripts.js' %}"></script>
+
+
+{% load bootstrap5 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<br>
+<br>
+
+<section class="container-section mb-4">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="portfolio-box-caption">
+                <h1>Books List</h1>
+                <div class="container-fluid">
+                    <div class="row border mt-3 bg-dark-green">
+                        <h2>Search Form</h2>
+                        <form method="get" action="{% url 'read_connect_books' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="author_name" class="text-white">Author Name:</label>
+                                        <input type="text" class="form-control" id="author_name" name="author_name" placeholder="Enter a value">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="title" class="text-white">Book Title:</label>
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter a value">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="category" class="text-white">Category:</label>
+                                        <input type="text" class="form-control" id="category" name="category" placeholder="Enter a value">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="status" class="text-white">Status:</label>
+                                        <select class="form-select" id="status" name="status">
+                                            <option value="">Select Status</option>
+                                            {% for status in unique_statuses %}
+                                                <option value="{{ status }}">{{ status }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="start_date" class="text-white">Start Date:</label>
+                                        <input type="date" class="form-control" id="start_date" name="start_date">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="end_date" class="text-white">End Date:</label>
+                                        <input type="date" class="form-control" id="end_date" name="end_date">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="start_page" class="text-white">Start Page Count:</label>
+                                        <input type="number" class="form-control" id="start_page" name="start_page">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="end_page" class="text-white">End Page Count:</label>
+                                        <input type="number" class="form-control" id="end_page" name="end_page">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="sort_by" class="text-white">Sort By:</label>
+                                        <select class="form-control" id="sort_by" name="sort_by">
+                                            <option value="title_sort">Title</option>
+                                            <option value="pageCount_sort">Page Count</option>
+                                            <option value="publishedDate_sort">Published Date</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="form-group mb-3">
+                                        <label for="sort_order" class="text-white">Sort Order:</label>
+                                        <select class="form-control" id="sort_order" name="sort_order">
+                                            <option value="asc" selected>Ascending</option>
+                                            <option value="desc">Descending</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-custom mb-4" style="background-color: gray; width:25%">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="container">
+                    <h3>Filters values</h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-4">
+                            <h6>
+                                {% if filters_values.author_name %}
+                                    Authors: {{ filters_values.author_name }}{% if filters_values.title or filters_values.category %} / <br>{% endif %}
+                                {% endif %}
+                                {% if filters_values.title %}
+                                    Title: {{ filters_values.title }}{% if filters_values.category %} / <br>{% endif %}
+                                {% endif %}
+                                {% if filters_values.category %}
+                                    Category: {{ filters_values.category }}
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div class="col-4">
+                            <h6>
+                                {% if filters_values.status %}
+                                    Status: {{ filters_values.status }}{% if filters_values.title or filters_values.category %} / <br>{% endif %}
+                                {% endif %}
+                                {% if filters_values.start_date %}
+                                    Range Date: {{ filters_values.start_date }}
+                                    {% if filters_values.end_date %}
+                                        / {{ filters_values.end_date }}
+                                    {% endif %}
+                                    <br>
+                                {% endif %}
+
+                                {% if filters_values.start_page %}
+                                    Rango de Paginas: {{ filters_values.start_page }}
+                                    {% if filters_values.end_page %}
+                                        / {{ filters_values.end_page }}
+                                    {% endif %}
+                                    <br>
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div class="col">
+                            <h6>
+                                {% if filters_values.sort_by %}
+                                    Ordenado por: {{ filters_values.sort_by }} / <br>
+                                {% endif %}
+                            </h6>
+                            <h6>
+                                {% if filters_values.sort_order %}
+                                    Tipo de orden: {{ filters_values.sort_order }} / <br>
+                                {% endif %}
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+                {% for book in data %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h2 class="card-title">{{ book.title }}</h2>
+                                    </div>
+                                    <div class="col-md-3 text-end">
+                                        <h5 class="card-subtitle mb-3">ISBN: {{ book.isbn }}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-8">
+                                         <p class="card-text">Authors:
+                                            {% for author in book.authors.all %}
+                                                {{ author.name }}
+                                                {% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                    <div class="col">
+                                        <p class="card-text">Status: {{ book.status }}</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-8">
+                                        <p class="card-text">Category:
+                                            {% for item in book.categories.all %}
+                                                {{ item.name }}
+                                                {% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                    <div class="col">
+                                        <p class="card-text">N°Paginas: {{ book.pageCount }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-2">
+                                    <img src="{{ book.thumbnailUrl }}" class="card-img" style="width: 200px; height: 200px;" alt="Imagen no disponible">
+                                </div>
+                                <div class="col">
+                                    <em class="card-text short-description">{{ book.shortDescription }}</em>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between">
+                                <p class="card-text">
+                                    <span class="py-2 px-3" style="background-color: darkgreen; color: white; font-weight: bold;">
+                                        Fecha de publicación: {{ book.publishedDate|date:"M. Y" }}
+                                    </span>
+                                </p>
+                                <div class="center-button">
+                                    <button class="open-modal-button" style="height: 3rem; width: 25%;" data-book-isbn="{{ book.isbn }}">
+                                        Ver Detalle  <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row d-flex justify-content-between">
+                                {% if book.isbn %}
+                                <form method="POST" action="{% url 'update_book_status' book.isbn %}">
+                                    {% csrf_token %}
+                                    <div class="row mb-4" style="margin-left: 15%; margin-right: 15%;">
+                                        <div class="col-4"> <!-- Each component takes 25% width -->
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="currentlyReading{{ book.isbn }}" name="currently_reading" value="true">
+                                                <label class="form-check-label" style="display:flex; for="currentlyReading{{ book.isbn }}">Currently Reading</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4"> <!-- Each component takes 25% width -->
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="wantToRead{{ book.isbn }}" name="want_to_read" value="true">
+                                                <label class="form-check-label" style="display:flex;" for="wantToRead{{ book.isbn }}">Want to Read</label>
+                                            </div>
+                                        </div>
+                                        <div class="col"> <!-- The button takes 25% width -->
+                                            <div class="center-button">
+                                                <button type="submit" class="button" style="height: 3rem; width: 100%;">Update Status</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                {% else %}
+                                    <div class="row">
+                                        <p>Invalid ISBN for this book.</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                <p>
+                                {% if book.title in userbookstatus_titles_want_to_read %}
+                                    This book is marked as "Want to Read" by you.
+                                {% elif book.title in userbookstatus_titles_currently_reading %}
+                                    This book is marked as "Currently Reading" by you.
+                                {% else %}
+                                    This book is not marked by you.
+                                {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="container">
+    <div id="bookModal" class="modal custom-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="bookDetails">
+                <!-- Book details will be displayed here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

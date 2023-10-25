@@ -9,7 +9,6 @@
 {% bootstrap_javascript %}
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
-
 {% load crispy_forms_tags %}
 
 {% block content %}
@@ -108,7 +107,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-custom">Search</button>
+                            <button type="submit" class="btn btn-custom mb-4" style="background-color: gray; width:25%">Search</button>
                         </form>
                     </div>
                 </div>
@@ -212,30 +211,54 @@
                                     </span>
                                 </p>
                                 <div class="center-button">
-                                    <button class="open-modal-button" style="height: 3rem; width: 25%;" data-book-isbn="{{ book.isbn }}">Ver Detalle</button>
+                                    <button class="open-modal-button" style="height: 3rem; width: 25%;" data-book-isbn="{{ book.isbn }}">
+                                        Ver Detalle  <i class="fas fa-search"></i>
+                                    </button>
                                 </div>
-                                <div class="row">
-                                    {% if book.isbn %}
-                                  <form method="POST" action="{% url 'update_book_status' book.isbn %}">
-                                        {% csrf_token %}
-                                        <div class="row">
+                            </div>
+                            <hr>
+                            <div class="row d-flex justify-content-between">
+                                {% if book.isbn %}
+                                <form method="POST" action="{% url 'update_book_status' book.isbn %}">
+                                    {% csrf_token %}
+                                    <div class="row mb-4" style="margin-left: 15%; margin-right: 15%;">
+                                        <div class="col-4"> <!-- Each component takes 25% width -->
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="checkbox" id="currentlyReading{{ book.isbn }}" name="currently_reading" value="true">
-                                                <label class="form-check-label" for="currentlyReading{{ book.isbn }}">Currently Reading</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="wantToRead{{ book.isbn }}" name="want_to_read" value="true">
-                                                <label class="form-check-label" for="wantToRead{{ book.isbn }}">Want to Read</label>
-                                            </div>
-                                            <div class="center-button">
-                                                <button type="submit" style="height: 3rem; width: 25%;">Update Status</button>
+                                                <label class="form-check-label" style="display:flex; for="currentlyReading{{ book.isbn }}">Currently Reading</label>
                                             </div>
                                         </div>
-                                    </form>
-                                    {% else %}
+                                        <div class="col-4"> <!-- Each component takes 25% width -->
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="wantToRead{{ book.isbn }}" name="want_to_read" value="true">
+                                                <label class="form-check-label" style="display:flex;" for="wantToRead{{ book.isbn }}">Want to Read</label>
+                                            </div>
+                                        </div>
+                                        <div class="col"> <!-- The button takes 25% width -->
+                                            <div class="center-button">
+                                                <button type="submit" class="button" style="height: 3rem; width: 100%;">Update Status</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                {% else %}
+                                    <div class="row">
                                         <p>Invalid ISBN for this book.</p>
-                                    {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                {% if userbookstatus %}
+                                <div class="row">
+                                    <p>
+                                        {% if book.title in userbookstatus_titles %}
+                                            This book is marked as "Currently Reading" or "Want to Read" by you.
+                                        {% else %}
+                                            This book is not marked by you.
+                                        {% endif %}
+                                    </p>
                                 </div>
+                            {% endif %}
                             </div>
                         </div>
                     </div>
