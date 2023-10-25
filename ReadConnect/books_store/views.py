@@ -11,12 +11,14 @@ from django.core import serializers
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .forms import BookStatusForm
 
 from .utils import *
 from .forms import *
 from .models import *
+from .paginations import CustomPagination
 
 # Set up a logger
 logger = logging.getLogger(__name__)
@@ -343,11 +345,10 @@ def read_connect_books(request):
     '''
     # Use the filter criteria to retrieve books
     # Define default values for each filter
-    default_status = "PUBLISH"
     default_start_date = "1900-10-01T00:00:00.000-0700"
     default_end_date = "2023-10-01T00:00:00.000-0700"
-    default_start_page = 100  # Set your desired default value
-    default_end_page = 1000  # Set your desired default value
+    default_start_page = 0  # Set your desired default value
+    default_end_page = 10000  # Set your desired default value
 
     # Initialize an empty Q object to build the query
     query = Q()
@@ -360,11 +361,6 @@ def read_connect_books(request):
 
     if category:
         query &= Q(categories__name__icontains=category)
-
-    if status:
-        query &= Q(status=status)
-    else:
-        query &= Q(status=default_status)
 
     if start_date:
         query &= Q(publishedDate__gte=start_date)
@@ -422,7 +418,17 @@ def read_connect_books(request):
     userbookstatus_currently_reading = UserBookStatus.objects.filter(user=user, currently_reading=True)
     userbookstatus_titles_currently_reading = [status.book.title for status in userbookstatus_currently_reading]
 
-    context = {'data': books, 'filters_values': filters_values,
+    paginator = Paginator(books, 20)
+    page = request.GET.get('page')
+
+    try:
+        book_list = paginator.page(page)
+    except PageNotAnInteger:
+        book_list = paginator.page(1)
+    except EmptyPage:
+        book_list = paginator.page(paginator.num_pages)
+
+    context = {'data': book_list, 'filters_values': filters_values, 'page': page,
                'userbookstatus_titles_want_to_read': userbookstatus_titles_want_to_read,
                'userbookstatus_titles_currently_reading': userbookstatus_titles_currently_reading,
                }

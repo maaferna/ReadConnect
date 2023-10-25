@@ -264,7 +264,7 @@
                                 {% elif book.title in userbookstatus_titles_currently_reading %}
                                     This book is marked as "Currently Reading" by you.
                                 {% else %}
-                                    This book is not marked by you.
+
                                 {% endif %}
                                 </p>
                             </div>
@@ -273,6 +273,20 @@
                 </div>
                 <hr>
                 {% endfor %}
+                <div class="row">
+                    <nav style="--bs-breadcrumb-divider: '/'" aria-label="breadcrumb">
+                        <div class="breadcrumb">
+                            <ol>
+                                {% if data.has_previous %}
+                                <li class="breadcrumb-item"><a href="?page={{ data.previous_page_number }}#books-list">&laquo; PREV </a></li>
+                                {% endif %}
+                                {% if  data.has_next %}
+                                <li class="breadcrumb-item"><a href="?page={{ data.next_page_number }}#books-list"> NEXT &raquo;</a></li>
+                                {% endif %}
+                            </ol>
+                        </div>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
