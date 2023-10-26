@@ -5,7 +5,7 @@ from datetime import datetime
 import pytz
 from dateutil import parser
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import logging  # Add this import
 from django.core import serializers
 from django.views.decorators.http import require_POST
@@ -441,39 +441,30 @@ def read_connect_books(request):
 
     return render(request, "books_store/read_connect.html", context)
 
+
 @login_required
-@require_POST
-def create_book_rating(request, book_isbn):
+def create_book_rating(request, book_id):
     if request.method == 'POST':
         new_rating = request.POST.get('new_rating')
         new_comment = request.POST.get('new_comment')
 
-        # Validate the data
         if not new_rating:
-            return redirect('get_book_details', isbn=book_isbn)
+            return JsonResponse({'error': 'New rating is required'})
 
-        # Retrieve the book based on ISBN (assuming you have a Book model)
-        try:
-            book = Book.objects.get(isbn=book_isbn)
-        except Book.DoesNotExist:
-            # Handle the case where the book doesn't exist
-            return redirect('get_book_details', isbn=book_isbn)
+        book = get_object_or_404(Book, id=book_id)
 
-        # Create a new BookRating instance
-        book_rating, created = BookRating.objects.get_or_create(
-            user=request.user,  # Assuming you have user authentication
-            book=book,
-            defaults={'rating': new_rating},
-        )
+        # Try to get an existing BookRating instance, or create a new one if it doesn't exist
+        book_rating, created = BookRating.objects.get_or_create(user=request.user, book=book)
 
-        # Update the comment if provided
-        if new_comment:
-            book_rating.comment = new_comment
-            book_rating.save()
+        # Update the rating and comment
+        book_rating.rating = new_rating
+        book_rating.comment = new_comment
+        book_rating.save()
 
-        return redirect('get_book_details', isbn=book_isbn)
+        return redirect('read_connect_books')
 
-    return redirect('get_book_details', isbn=book_isbn)
+    return redirect('read_connect_books')
+
 
 @login_required
 @require_POST

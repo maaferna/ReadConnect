@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", function() {
                             <h2 class="modal-title">${book.fields.title}</h2>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class "modal-body">
                             <div class="row">
-                                 <p>${book.fields.longDescription}</p>
+                                <p>${book.fields.longDescription}</p>
                             </div>
                             <div class="row">
                                 <div class="col-3">
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <div class="col">
                                     <img src="${book.fields.thumbnailUrl}" class="card-img" style="width: 200px; height: 200px;" alt="Imagen no disponible">
                                 </div>
-                            </div
+                            </div>
                         </div>
                     `;
                     modal.style.display = "block";
@@ -49,10 +49,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    const closeButton = document.querySelector(".close");
+    const closeButton = document.querySelector(".btn-close");
     closeButton.addEventListener("click", () => {
         modal.style.display = "none";
     });
+
 
     window.addEventListener("click", (event) => {
         if (event.target === modal) {
@@ -61,49 +62,109 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
- (document).ready(function() {
-        // Add change event listeners to filter form fields
-        $('#author_name, #title, #category, #status, #start_date, #end_date, #start_page, #end_page, #sort_by, #sort_order').on('change', function() {
-            updateBookList();
-        });
 
-        // Function to update the book list
-        function updateBookList() {
-            // Gather filter values
-            var author_name = $('#author_name').val();
-            var title = $('#title').val();
-            var category = $('#category').val();
-            var status = $('#status').val();
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
-            var start_page = $('#start_page').val();
-            var end_page = $('#end_page').val();
-            var sort_by = $('#sort_by').val();
-            var sort_order = $('#sort_order').val();
-
-            // Send an AJAX request to update the book list
-            $.ajax({
-                url: '{% url "read_connect_books" %}',
-                type: 'GET',
-                data: {
-                    'author_name': author_name,
-                    'title': title,
-                    'category': category,
-                    'status': status,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                    'start_page': start_page,
-                    'end_page': end_page,
-                    'sort_by': sort_by,
-                    'sort_order': sort_order
-                },
-                success: function(data) {
-                    // Update the book list with the response data
-                    $('#book-list-container').html(data);
-                }
-            });
-        }
+$(document).ready(function() {
+    // Add change event listeners to filter form fields
+    $('#author_name, #title, #category, #status, #start_date, #end_date, #start_page, #end_page, #sort_by, #sort_order').on('change', function() {
+        updateBookList();
     });
 
+    // Function to update the book list
+    function updateBookList() {
+        // Gather filter values
+        var author_name = $('#author_name').val();
+        var title = $('#title').val();
+        var category = $('#category').val();
+        var status = $('#status').val();
+        var start_date = $('#start_date').val();
+        var end_date = $('#end_date').val();
+        var start_page = $('#start_page').val();
+        var end_page = $('#end_page').val();
+        var sort_by = $('#sort_by').val();
+        var sort_order = $('#sort_order').val();
+
+        // Send an AJAX request to update the book list
+        $.ajax({
+            url: '/read_connect_books/',  // Replace with the actual URL
+            type: 'GET',
+            data: {
+                'author_name': author_name,
+                'title': title,
+                'category': category,
+                'status': status,
+                'start_date': start_date,
+                'end_date': end_date,
+                'start_page': start_page,
+                'end_page': end_page,
+                'sort_by': sort_by,
+                'sort_order': sort_order
+            },
+            success: function(data) {
+                // Update the book list with the response data
+                $('#book-list-container').html(data);
+            }
+        });
+    }
+});
+
+
+// Handle form submission
+$('#create-rating-form').submit(function(e) {
+    e.preventDefault();  // Prevent the default form submission
+    console.log('Form submitted'); // Add this line for testing
+
+    // Get the new_rating and new_comment values
+    var newRating = $('#rating').val();
+    var newComment = $('#comment').val();
+    var bookId = $('#book-id-input').val();  // Use book.id here
+    console.log(bookId);
+    // Get the CSRF token from cookies
+    var csrfToken = getCookie('csrftoken');
+    // Send an AJAX request to the create_book_rating view
+    $.ajax({
+        url: '/create_book_rating/' + bookId + '/',
+        type: 'POST',
+        data: {
+            new_rating: newRating,
+            new_comment: newComment,
+            csrfmiddlewaretoken: csrfToken
+        },
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: function(response) {
+            // Update the book list with applied filters
+            console.log('AJAX URL:', '/create_book_rating/' + bookId + '/');
+            updateBookList();
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 302) {
+                // Handle the 302 status here, e.g., show a message to the user
+                console.log('Redirection occurred');
+            } else {
+                // Handle other errors
+            }
+        }
+    });
+});
+
+
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    console.log('CSRF Token:', cookieValue); // Add this line for debugging
+    return cookieValue;
+}
 
 

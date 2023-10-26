@@ -273,26 +273,27 @@
                                 <div class="col-8">
                                     <div class="card p-3 border rounded shadow">
                                         <h4>Rate and Comment:</h4>
-                                        <form method="POST" action="{% url 'create_book_rating' book.isbn %}">
-                                            {% csrf_token %}
-                                            <div class="row mb-3">
-                                                <div class="col-3">
-                                                    <label for="rating" class="form-label">Rating:</label>
-                                                    <select class="form-select" id="rating" name="new_rating">
-                                                        <option value="">Select Rating</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                    </select>
+                                            <form method="POST" action="{% url 'create_book_rating' book.id %}">
+                                                {% csrf_token %}
+                                                <div class="row mb-3">
+                                                    <div class="col-3">
+                                                        <label for="rating" class="form-label">Rating:</label>
+                                                        <select class="form-select" id="rating" name="new_rating">
+                                                            <option value="">Select Rating</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <label for="comment" class="form-label">Comment:</label>
+                                                        <textarea class="form-control" id="comment" name="new_comment" rows="3" placeholder="Enter your comment"></textarea>
+                                                    </div>
+                                                    <input type="hidden" id="book-isbn-input" name="book_id" value="{{ book.id }}">
                                                 </div>
-                                                <div class="col-9">
-                                                    <label for="comment" class="form-label">Comment:</label>
-                                                    <textarea class="form-control" id="comment" name="new_comment" rows="3" placeholder="Enter your comment"></textarea>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Submit Rating and Comment</button>
+                                                <button type="submit" class="btn btn-primary" id="submit-rating-button">Submit Rating and Comment</button>
                                         </form>
                                     </div>
                                 </div>
