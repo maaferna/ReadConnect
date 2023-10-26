@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+
+
 $(document).ready(function() {
     // Add change event listeners to filter form fields
     $('#author_name, #title, #category, #status, #start_date, #end_date, #start_page, #end_page, #sort_by, #sort_order').on('change', function() {
