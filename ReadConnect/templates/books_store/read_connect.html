@@ -300,6 +300,38 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-4 justify-content-center">
+                                {% for info in book_info %}
+                                    {% if info.book.title == book.title %}
+                                    <div class="row">
+                                        <div class="card-headers">
+                                            <p class="card-text">Review Count: {{ info.review_count }}</p>
+                                            <p class="card-text">Average Rating: {{ info.average_rating }} stars</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card mb-4">
+                                            <div class="card-body">
+                                                <ul class="list-group list-group-flush">
+                                                    {% for comment_info in info.comments %}
+                                                        <li class="list-group-item">
+                                                            <strong>
+                                                                {% if comment_info.author_name == "me" %}
+                                                                    Me
+                                                                {% else %}
+                                                                    {{ comment_info.author_name }}
+                                                                {% endif %}:
+                                                            </strong>
+                                                            <span class="comment-text">{{ comment_info.comment }}</span>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

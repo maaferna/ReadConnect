@@ -11,6 +11,7 @@ from django.core import serializers
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.db.models import F
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.template.loader import render_to_string
 from .forms import BookStatusForm
@@ -429,6 +430,32 @@ def read_connect_books(request, author_name='', title='', category='', status=''
     except EmptyPage:
         book_list = paginator.page(paginator.num_pages)
 
+    # Fetch additional information for each book
+    book_info = []
+    for book in books:
+        reviews = BookRating.objects.filter(book=book).order_by('-timestamp')
+        review_count = reviews.count()
+
+        # Calculate the average rating
+        total_rating = sum(review.rating for review in reviews)
+        average_rating = total_rating / review_count if review_count > 0 else 0
+
+        # Fetch comments and author names
+        comments = []
+        for review in reviews:
+            author_name = review.user.username
+            comment = review.comment
+            if review.user == request.user:
+                author_name = "me"  # Replace the author name with "me" for the current user
+            comments.append({'author_name': author_name, 'comment': comment})
+
+        book_info.append({
+            'book': book,
+            'review_count': review_count,
+            'average_rating': average_rating,
+            'comments': comments,
+        })
+
     book_list_html = render_to_string('books_store/read_connect.html', {'data': book_list})
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
@@ -438,6 +465,7 @@ def read_connect_books(request, author_name='', title='', category='', status=''
     context = {'data': book_list, 'filters_values': filters_values, 'page': page,
                'userbookstatus_titles_want_to_read': userbookstatus_titles_want_to_read,
                'userbookstatus_titles_currently_reading': userbookstatus_titles_currently_reading,
+               'book_info': book_info,
                }
 
     return render(request, "books_store/read_connect.html", context)
