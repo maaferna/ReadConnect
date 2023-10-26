@@ -24,8 +24,10 @@
                 <div class="container-fluid">
                     <div class="row border mt-3 bg-dark-green">
                         <h2>Search Form</h2>
-                        <form method="get" action="{% url 'read_connect_books' %}">
+                        <form method="get" action="{% url 'read_connect_books' %}?author_name={{ request.GET.author_name }}&title={{ request.GET.title }}&category={{ request.GET.category }}&status={{ request.GET.status }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&start_page={{ request.GET.start_page }}&end_page={{ request.GET.end_page }}&sort_by={{ request.GET.sort_by }}&sort_order={{ request.GET.sort_order }}">
                             {% csrf_token %}
+                             <input type="hidden" name="author_name" value="{{ request.GET.author_name }}">
+                            <input type="hidden" name="title" value="{{ request.GET.title }}">
                             <div class="row">
                                 <div class="col-sm-6 col-xs-12">
                                     <div class="form-group mb-3">
@@ -273,7 +275,7 @@
                                 <div class="col-8">
                                     <div class="card p-3 border rounded shadow">
                                         <h4>Rate and Comment:</h4>
-                                            <form method="POST" action="{% url 'create_book_rating' book.id %}">
+                                            <form method="POST" action="{% url 'create_book_rating' book.id %}?author_name={{ request.GET.author_name }}&title={{ request.GET.title }}&category={{ request.GET.category }}&status={{ request.GET.status }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&start_page={{ request.GET.start_page }}&end_page={{ request.GET.end_page }}&sort_by={{ request.GET.sort_by }}&sort_order={{ request.GET.sort_order }}">
                                                 {% csrf_token %}
                                                 <div class="row mb-3">
                                                     <div class="col-3">
@@ -300,6 +302,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="book-list-container">
+                    <!-- ... -->
                 </div>
                 {% endfor %}
                 <div class="row" >

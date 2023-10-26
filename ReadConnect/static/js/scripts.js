@@ -135,6 +135,8 @@ $('#create-rating-form').submit(function(e) {
         success: function(response) {
             // Update the book list with applied filters
             console.log('AJAX URL:', '/create_book_rating/' + bookId + '/');
+             console.log('Rating and comment submitted successfully.');
+            // Reload the book list based on your filtering criteria
             updateBookList();
         },
         error: function(xhr, status, error) {
@@ -167,4 +169,26 @@ function getCookie(name) {
     return cookieValue;
 }
 
+ document.addEventListener('DOMContentLoaded', function () {
+        // Access the filter parameters from the URL and populate the hidden fields
+        var authorName = getParameterByName('author_name');
+        var title = getParameterByName('title');
+        // Populate other hidden fields similarly
+
+        // Update the value of the hidden fields
+        document.querySelector('input[name="author_name"]').value = authorName;
+        document.querySelector('input[name="title"]').value = title;
+        // Update other hidden fields similarly
+
+        // Function to get URL query parameters by name
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            var results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    });
 

@@ -24,6 +24,7 @@ from .paginations import CustomPagination
 logger = logging.getLogger(__name__)
 
 
+
 def index(request):
     context = {}
     return render(request, "index.html", context)
@@ -291,7 +292,7 @@ def update_book_status(request, book_isbn):
 
 
 @login_required
-def read_connect_books(request):
+def read_connect_books(request, author_name='', title='', category='', status='', start_date='', end_date='', start_page='', end_page='', sort_by='', sort_order='asc'):
     # Get the query parameters from the request
     author_name = request.GET.get('author_name')
     title = request.GET.get('title')
@@ -444,6 +445,22 @@ def read_connect_books(request):
 
 @login_required
 def create_book_rating(request, book_id):
+    # Extract the filter parameters from the request.GET
+    filter_parameters = {
+        'author_name': request.GET.get('author_name', ''),
+        'title': request.GET.get('title', ''),
+        'category': request.GET.get('category', ''),
+        'status': request.GET.get('status', ''),
+        'start_date': request.GET.get('start_date', ''),
+        'end_date': request.GET.get('end_date', ''),
+        'start_page': request.GET.get('start_page', ''),
+        'end_page': request.GET.get('end_page', ''),
+        'sort_by': request.GET.get('sort_by', ''),
+        'sort_order': request.GET.get('sort_order', ''),
+    }
+
+    # You now have the filter parameters as a dictionary
+    print(filter_parameters)
     if request.method == 'POST':
         new_rating = request.POST.get('new_rating')
         new_comment = request.POST.get('new_comment')
@@ -461,9 +478,14 @@ def create_book_rating(request, book_id):
         book_rating.comment = new_comment
         book_rating.save()
 
-        return redirect('read_connect_books')
+    # Extract the filter parameters from the request.GET when provided
 
-    return redirect('read_connect_books')
+    # Include other filter parameters similarly
+
+    # Extract the filter parameters from the request.GET when provided
+    # Pass the filter parameters to the read_connect_books view using **filter_params
+    return read_connect_books(request, **filter_parameters)
+
 
 
 @login_required
