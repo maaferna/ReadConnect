@@ -29,3 +29,7 @@ class UserBookStatusAdmin(admin.ModelAdmin):
 @admin.register(BookRating)
 class BookRatingAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'book', 'rating', 'comment', 'timestamp')
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'full_name')

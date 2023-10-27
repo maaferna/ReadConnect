@@ -518,7 +518,7 @@ def create_book_rating(request, book_id):
 
 @login_required
 @require_POST
-def update_book_rating(request, book_isbn):
+def update_book_rating(request, book_id):
     try:
         book_rating = BookRating.objects.get(user=request.user, book_id=book_id)
     except BookRating.DoesNotExist:
@@ -543,3 +543,40 @@ def update_book_rating(request, book_isbn):
         return JsonResponse({'message': 'Comment updated successfully.'})
     else:
         return JsonResponse({'error': 'No data provided for update.'}, status=400)
+
+
+
+@login_required
+def edit_profile(request):
+    user_profile = request.user.userprofile
+    if request.method == 'POST':
+        form = UpdateUserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            print("Form is valid")
+            form.save()
+            print("Form saved")
+            return redirect('profile')
+        else:
+            print("Form is not valid. Errors:", form.errors)
+    else:
+        form = UpdateUserProfileForm(instance=user_profile)
+
+    context = {'form': form}
+    return render(request, 'books_store/edit_profile.html', context)
+
+
+@login_required
+def profile(request):
+    # Get the user's profile data
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    print(user_profile.full_name)
+
+    # Get the user's book ratings
+    user_ratings = BookRating.objects.filter(user=request.user)
+
+    context = {
+        'user_profile': user_profile,
+        'user_ratings': user_ratings,
+    }
+
+    return render(request, 'books_store/profile.html', context)

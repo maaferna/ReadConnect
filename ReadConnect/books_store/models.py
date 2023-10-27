@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import User, AbstractUser
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
@@ -66,3 +65,25 @@ class BookRating(models.Model):
         self.rating = new_rating
         self.comment = new_comment
         self.save()
+
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=150, unique=True)
+    full_name = models.CharField(max_length=255, blank=True)
+    want_to_read = models.ManyToManyField('Book', related_name='users_want_to_read', blank=True)
+    currently_reading = models.ManyToManyField('Book', related_name='users_currently_reading', blank=True)
+
+    def save(self, *args, **kwargs):
+        # Set the username to the User model's username if it's not set
+        if not self.username:
+            self.username = self.user.username
+
+        # Construct the full_name from User model's first_name and last_name if it's not set
+        if not self.full_name:
+            self.full_name = f"{self.user.first_name} {self.user.last_name}"
+
+        super(UserProfile, self).save(*args, **kwargs)
+    def __str__(self):
+        return self.user.username

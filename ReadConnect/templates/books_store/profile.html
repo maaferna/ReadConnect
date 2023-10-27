@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% load fontawesome_5 %}
+{{ STATIC_URL }}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>User Profile</h2>
+  <p><strong>Username:</strong> {{ user_profile.user.username }}</p>
+  <p><strong>First Name:</strong> {{ user_profile.user.first_name }}</p>
+  <p><strong>Last Name:</strong> {{ user_profile.user.last_name }}</p>
+<p><strong>Last Name:</strong> {{ user_profile.user.full_name }}</p>
+
+  <h3>Book Ratings</h3>
+  <ul>
+    {% for rating in user_ratings %}
+      <li>
+        <strong>Book Title:</strong> {{ rating.book.title }}<br>
+        <strong>Rating:</strong> {{ rating.rating }}<br>
+        <strong>Comment:</strong> {{ rating.comment }}
+      </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

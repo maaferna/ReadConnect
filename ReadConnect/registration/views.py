@@ -79,7 +79,7 @@ def profile_view(request):
         'user': user,
         # Add any other context data you want to display on the profile page
     }
-    return render(request, 'registration/profile.html', context)
+    return render(request, 'registration/edit_profile.html', context)
 
 class CustomGoogleOAuth2LoginView(OAuth2LoginView):
     def login(self):
