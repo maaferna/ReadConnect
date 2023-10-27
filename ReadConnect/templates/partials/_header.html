@@ -6,26 +6,22 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="nav navbar-nav mr-auto">
-                        <li class="nav-item"><a class="nav-link" href="/">Simulador</li>
+                        <li class="nav-item"><a class="nav-link" href="/">Read Connect</li>
                         <li class="nav-item"><a class="nav-link" href="/"><i class="fa fa-home" aria-hidden="true"></i>Inicio<span class="sr-only">(current)</span></a></a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" ariaexpanded="false"><i class="fa fa-plus" aria-hidden="true"></i>Agregar</a>
                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item"  id="pdf_file" href="">Agregar Laboratorio</a></li>
+                                <li><a class="dropdown-item"  id="add_books" href="{% url 'home' %}">Agregar Book</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item"  id="pdf_file" href="">Agregar Director Ejecutivo</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item"  id="pdf_file" href="">Agregar Producto</a></li>
+                                <li><a class="dropdown-item"  id="add_comment" href="{% url 'home' %}">Agregar Reviews a un Book</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" ariaexpanded="false"><i class="fa fa-list" aria-hidden="true"></i>Mostrar</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" ariaexpanded="false"><i class="fa fa-list" aria-hidden="true"></i>Mostrar</a>
                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item"  id="pdf_file" href="">Mostrar listado de Laboratorios</a></li>
+                                <li><a class="dropdown-item"  id="books_retrieve_from_json" href="{% url 'books_retrieve' %}">Mostrar listado de Libros desde Json File</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item"  id="pdf_file" href="">Mostrar Directores Ejecutivos</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item"  id="pdf_file" href="">Mostrar Productos</a></li>
+                                <li><a class="dropdown-item"  id="read_connect_books" href="{% url 'read_connect_books' %}">Conectar Read Connect con ORM Django</a></li>
                             </ul>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#"><span class="fa fa-address-book"></span>Contacto</a></li>
@@ -36,7 +32,7 @@
                 <ul class="navbar-nav mr-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_logout' %}">Salir</a>
+                        <a class="nav-link" href="{% url 'logout' %}">Salir</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Hola, {{user.username}}</a>
