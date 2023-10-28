@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
-
+from PIL import Image
+from .utils import profile_image_path
 class Book(models.Model):
     title = models.CharField(max_length=255)
     isbn = models.CharField(max_length=13, unique=True)
@@ -74,6 +75,7 @@ class UserProfile(models.Model):
     full_name = models.CharField(max_length=255, blank=True)
     want_to_read = models.ManyToManyField('Book', related_name='users_want_to_read', blank=True)
     currently_reading = models.ManyToManyField('Book', related_name='users_currently_reading', blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', default='default_profile.png')
 
     def save(self, *args, **kwargs):
         # Set the username to the User model's username if it's not set

@@ -30,7 +30,7 @@
             <div class="container border p-3 mb-3 bg-light text-dark" id="contact">
                 <div class="form-control">
                     <h3>Editar Perfil de Usuario</h3>
-                    <form action="" method="post">
+                    <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-group row mt-8">
                             <div class="col-md-6 mb-0">
@@ -38,6 +38,14 @@
                             </div>
                             <div class="col-md-6 mb-0">
                                 {{ form.full_name|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-group row mt-8">
+                            <div class="col-md-6 mb-0">
+                                  {{ form.profile_image|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+
                             </div>
                         </div>
                         <div class="d-grid col-6">

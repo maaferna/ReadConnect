@@ -10,9 +10,10 @@ class BookStatusForm(forms.Form):
 class UpdateUserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['username', 'full_name']
+        fields = ['username', 'full_name', 'profile_image']
 
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_image': forms.FileInput(attrs={'class': 'form-control-file'})
         }

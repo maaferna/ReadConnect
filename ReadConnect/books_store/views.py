@@ -550,7 +550,7 @@ def update_book_rating(request, book_id):
 def edit_profile(request):
     user_profile = request.user.userprofile
     if request.method == 'POST':
-        form = UpdateUserProfileForm(request.POST, instance=user_profile)
+        form = UpdateUserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             print("Form is valid")
             form.save()

@@ -10,3 +10,8 @@ def add_filter(filters, field_name, value, operator=None):
             filters[f"{field_name}__{operator}"] = value
         else:
             filters[field_name] = value
+
+
+
+def profile_image_path(instance, filename):
+    return f'profile_images/{instance.user.username}{filename[-4:]}'
