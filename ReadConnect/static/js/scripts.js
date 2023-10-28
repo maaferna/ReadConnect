@@ -194,3 +194,21 @@ function getCookie(name) {
         }
     });
 
+
+$(document).ready(function() {
+    // Find all card sets (each set contains cards with rows to be adjusted)
+    var cardSets = $('.div-for-want-to-read, .div-for-currently-reading');
+
+    // For each card set, find the tallest row height and set all rows in the set to that height
+    cardSets.each(function() {
+        var rows = $(this).find('.card-row');
+        var maxRowHeight = 0;
+        rows.each(function() {
+            var rowHeight = $(this).height();
+            if (rowHeight > maxRowHeight) {
+                maxRowHeight = rowHeight;
+            }
+        });
+        rows.css('height', maxRowHeight + 'px');
+    });
+});

@@ -569,14 +569,17 @@ def edit_profile(request):
 def profile(request):
     # Get the user's profile data
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    print(user_profile.full_name)
 
-    # Get the user's book ratings
-    user_ratings = BookRating.objects.filter(user=request.user)
+    user_statuses = UserBookStatus.objects.filter(user=request.user).order_by('-book__publishedDate')
+    # Filter the statuses based on whether they are want_to_read or currently_reading
+    want_to_read_statuses = user_statuses.filter(want_to_read=True)
+    currently_reading_statuses = user_statuses.filter(currently_reading=True)
 
     context = {
         'user_profile': user_profile,
-        'user_ratings': user_ratings,
+        'user_statuses': user_statuses,
+        'want_to_read_statuses': want_to_read_statuses,
+        'currently_reading_statuses': currently_reading_statuses,
     }
 
     return render(request, 'books_store/profile.html', context)

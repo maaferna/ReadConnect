@@ -5,21 +5,88 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h2>User Profile</h2>
-  <p><strong>Username:</strong> {{ user_profile.user.username }}</p>
-  <p><strong>First Name:</strong> {{ user_profile.user.first_name }}</p>
-  <p><strong>Last Name:</strong> {{ user_profile.user.last_name }}</p>
-<p><strong>Last Name:</strong> {{ user_profile.user.full_name }}</p>
+<section class="container-section mb-4">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="portfolio-box-caption">
+              <h2>User Profile</h2>
+              <p><strong>Username:</strong> {{ user_profile.username }}</p>
+              <p><strong>Name:</strong> {{ user_profile.full_name }}</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-  <h3>Book Ratings</h3>
-  <ul>
-    {% for rating in user_ratings %}
-      <li>
-        <strong>Book Title:</strong> {{ rating.book.title }}<br>
-        <strong>Rating:</strong> {{ rating.rating }}<br>
-        <strong>Comment:</strong> {{ rating.comment }}
-      </li>
-    {% endfor %}
-  </ul>
+<hr>
+<section class="container-section mb-4">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="portfolio-box-caption">
+                <h2>Book Status</h2>
+                <hr>
+                <div class="div-for-want-to-read mt-4">
+                    <h4>Books You Want to Read</h4>
+                    <hr>
+                    <div class="row card-row">
+                        {% for status in want_to_read_statuses %}
+                            <div class="col-12 col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <img src="{{ status.book.thumbnailUrl }}" class="card-img" style="width: 200px; height: 200px;" alt="Image not available">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ status.book.title }}</h5>
+                                        <hr>
+                                        <p class="card-text">{{ status.book.shortDescription }}</p>
+                                        <em class="card-text">{{ status.book.publishedDate }}</em>
+                                        <div class="card-text">
+                                            <a href="{% url 'get_book_details' status.book.isbn %}">See Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="div-for-currently-reading">
+                    <h4>Books You Are Currently Reading</h4>
+                    <hr>
+                    <div class="row card-row mt-4">
+                        {% for status in currently_reading_statuses %}
+                            <div class="col-12 col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <img src="{{ status.book.thumbnailUrl }}" class="card-img" style="width: 200px; height: 200px;" alt="Image not available">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ status.book.title }}</h5>
+                                        <hr>
+                                        <p class="card-text">{{ status.book.shortDescription }}</p>
+                                        <em class="card-text">{{ status.book.publishedDate }}</em>
+                                        <div class="card-text">
+                                            <a href="{% url 'get_book_details' status.book.isbn %}">See Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div id="bookModal" class="modal custom-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="bookDetails">
+                <!-- Book details will be displayed here -->
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
