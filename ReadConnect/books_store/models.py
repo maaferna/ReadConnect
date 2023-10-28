@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from PIL import Image
 from .utils import profile_image_path
+from django.core.files.storage import default_storage
 class Book(models.Model):
     title = models.CharField(max_length=255)
     isbn = models.CharField(max_length=13, unique=True)
@@ -75,7 +76,7 @@ class UserProfile(models.Model):
     full_name = models.CharField(max_length=255, blank=True)
     want_to_read = models.ManyToManyField('Book', related_name='users_want_to_read', blank=True)
     currently_reading = models.ManyToManyField('Book', related_name='users_currently_reading', blank=True)
-    profile_image = models.ImageField(upload_to='profile_images/', default='default_profile.png')
+    profile_image = models.ImageField(upload_to=profile_image_path, default='default_profile.png')
 
     def save(self, *args, **kwargs):
         # Set the username to the User model's username if it's not set
@@ -85,6 +86,16 @@ class UserProfile(models.Model):
         # Construct the full_name from User model's first_name and last_name if it's not set
         if not self.full_name:
             self.full_name = f"{self.user.first_name} {self.user.last_name}"
+
+        # Check if a profile image with the same username exists
+        if self.profile_image:
+            existing_image = UserProfile.objects.filter(id=self.id).values('profile_image').first()
+            if existing_image:
+                existing_image_path = existing_image['profile_image']
+                if existing_image_path != self.profile_image.name:
+                    # Delete the old image file
+                    if default_storage.exists(existing_image_path):
+                        default_storage.delete(existing_image_path)
 
         super(UserProfile, self).save(*args, **kwargs)
     def __str__(self):

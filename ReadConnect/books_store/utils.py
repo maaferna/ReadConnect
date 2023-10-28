@@ -14,4 +14,4 @@ def add_filter(filters, field_name, value, operator=None):
 
 
 def profile_image_path(instance, filename):
-    return f'profile_images/{instance.user.username}{filename[-4:]}'
+    return f'profile_images/{instance.user.username}.png'
