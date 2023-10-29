@@ -8,10 +8,39 @@
 <section class="container-section mb-4">
     <div class="container-fluid">
         <div class="row g-0">
-            <div class="portfolio-box-caption">
-              <h2>User Profile</h2>
-              <p><strong>Username:</strong> {{ user_profile.username }}</p>
-              <p><strong>Name:</strong> {{ user_profile.full_name }}</p>
+            <div class="portfolio-box-caption mb-4">
+                <h2>User Profile</h2>
+                <hr>
+                <div class="container" style="background-color: #F7FBF5">
+                    <div class="row">
+                        <div class="col-6 pl-3">
+                            <div class="row">
+                                <div class="col-3">
+                                    <p class="mt-3"><strong>Username:</strong></p>
+                                </div>
+                                <div class="col">
+                                    <p class="mt-3">{{ user_profile.username }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 pl-3">
+                            <div class="row">
+                                <div class="col-3">
+                                    <p class="mt-3"><strong>Name:</strong></p>
+                                </div>
+                                <div class="col">
+                                    <p class="mt-3">{{ user_profile.full_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <img src="{{ user_profile.profile_image.url }}" class="rounded-circle mt-3" style="width: 200px; height: 200px;" alt="Image not available">
+                        </div>
+                    </div>
+                    <hr>
+                </div>
             </div>
         </div>
     </div>
