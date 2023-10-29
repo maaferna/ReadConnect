@@ -66,6 +66,24 @@
                                     <div class="card-body">
                                         <h5 class="card-title">{{ status.book.title }}</h5>
                                         <hr>
+                                         <div class="row">
+                                            <div class="col">
+                                                {% if status.comment_count > 0 %}
+                                                    <p class="card-text">Comment Count: {{ status.comment_count }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col">
+                                                {% if status.review_count > 0 %}
+                                                    <p class="card-text">Number of Reviews: {{ status.review_count }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col">
+                                                {% if status.average_rating %}
+                                                    <p class="card-text">Average Rating: {{ status.average_rating|floatformat:1 }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
                                         <p class="card-text">{{ status.book.shortDescription }}</p>
                                         <em class="card-text">{{ status.book.publishedDate }}</em>
                                         <div class="card-text">
@@ -91,6 +109,23 @@
                                     <div class="card-body">
                                         <h5 class="card-title">{{ status.book.title }}</h5>
                                         <hr>
+                                         <div class="row">
+                                            <div class="col">
+                                                {% if status.comment_count > 0 %}
+                                                    <p class="card-text">Comment Count: {{ status.comment_count }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col">
+                                                {% if status.review_count > 0 %}
+                                                    <p class="card-text">Number of Reviews: {{ status.review_count }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col">
+                                                {% if status.average_rating %}
+                                                    <p class="card-text">Average Rating: {{ status.average_rating|floatformat:1 }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                         <p class="card-text">{{ status.book.shortDescription }}</p>
                                         <em class="card-text">{{ status.book.publishedDate }}</em>
                                         <div class="card-text">

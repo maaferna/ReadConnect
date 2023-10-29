@@ -7,12 +7,16 @@ from dateutil import parser
 
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+
 import logging  # Add this import
 from django.core import serializers
+
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.db.models import F
+
+from django.db.models import Q, Avg, Case, When, Value, IntegerField, F, Count, ExpressionWrapper, fields, DecimalField, DateTimeField
+from django.utils import timezone  # Import the timezone module
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.template.loader import render_to_string
 
@@ -564,16 +568,27 @@ def edit_profile(request):
     context = {'form': form}
     return render(request, 'books_store/edit_profile.html', context)
 
-
 @login_required
 def profile(request):
     # Get the user's profile data
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    user_statuses = UserBookStatus.objects.filter(user=request.user).order_by('-book__publishedDate')
-    # Filter the statuses based on whether they are want_to_read or currently_reading
+    # Annotate each book with the average rating and rating count
+    user_statuses = UserBookStatus.objects.filter(user=request.user).annotate(
+        average_rating=Avg('book__bookrating__rating'),
+        comment_count=Count('book__bookrating__comment'),
+        review_count=Count('book__bookrating'),
+    )
+
+    # Separate books with reviews (average_rating is not null) from those without reviews
+    with_reviews = user_statuses.filter(average_rating__isnull=False).order_by('-average_rating', '-book__publishedDate')
+    without_reviews = user_statuses.filter(average_rating__isnull=True).order_by('-book__publishedDate')
+
+    # Combine the ordered sets of books
+    user_statuses = with_reviews | without_reviews
+
     want_to_read_statuses = user_statuses.filter(want_to_read=True)
-    currently_reading_statuses = user_statuses.filter(currently_reading=True)
+    currently_reading_statuses = user_statuses.filter(currently_reading=True).order_by('average_rating')
 
     context = {
         'user_profile': user_profile,
