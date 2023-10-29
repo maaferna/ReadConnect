@@ -12,9 +12,10 @@ import logging  # Add this import
 from django.core import serializers
 
 from django.views.decorators.http import require_POST
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from django.db.models import Q, Avg, Case, When, Value, IntegerField, F, Count, ExpressionWrapper, fields, DecimalField, DateTimeField
+from django.db.models import Q, Avg, Case, When, Value, IntegerField, F, Count, ExpressionWrapper, fields, DecimalField, DateTimeField, FloatField
 from django.utils import timezone  # Import the timezone module
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -310,6 +311,13 @@ def read_connect_books(request, author_name='', title='', category='', status=''
     sort_by = request.GET.get('sort_by')
     sort_order = request.GET.get('sort_order')
 
+    # Use the filter criteria to retrieve books
+    # Define default values for each filter
+    default_start_date = "1970-10-01T00:00:00.000-0700"
+    default_end_date = "2023-10-01T00:00:00.000-0700"
+    default_start_page = 300 # Set your desired default value
+    default_end_page = 10000  # Set your desired default value
+
     # Create a dictionary with the filter values
     filters_values = {
         'author_name': author_name,
@@ -323,39 +331,19 @@ def read_connect_books(request, author_name='', title='', category='', status=''
         'sort_by': sort_by,
         'sort_order': sort_order,
     }
-    '''
-    # Create a dictionary to hold the filter criteria
-    filters = {}
-    
-    
-    add_filter(filters, 'authors__name__icontains', author_name)
-    add_filter(filters, 'title__icontains', title)
-    add_filter(filters, 'categories__name__icontains', category)
-    add_filter(filters, 'status', status)
-    add_filter(filters, 'publishedDate', start_date, 'gte')
-    add_filter(filters, 'publishedDate', end_date, 'lte')
-
-    if start_page is not None:
-        try:
-            start_page = int(start_page)
-            add_filter(filters, 'pageCount', start_page, 'gte')
-        except ValueError:
-            pass
-
-    if end_page is not None:
-        try:
-            end_page = int(end_page)
-            add_filter(filters, 'pageCount', end_page, 'lte')
-        except ValueError:
-            pass
-    '''
-    # Use the filter criteria to retrieve books
-    # Define default values for each filter
-    default_start_date = "1900-10-01T00:00:00.000-0700"
-    default_end_date = "2023-10-01T00:00:00.000-0700"
-    default_start_page = 0  # Set your desired default value
-    default_end_page = 10000  # Set your desired default value
-
+    # Store the query parameters in the session
+    request.session['filter_params'] = {
+        'author_name': author_name,
+        'title': title,
+        'category': category,
+        'status': status,
+        'start_date': start_date,
+        'end_date': end_date,
+        'start_page': start_page,
+        'end_page': end_page,
+        'sort_by': sort_by,
+        'sort_order': sort_order,
+    }
     # Initialize an empty Q object to build the query
     query = Q()
     # Check if the query parameters are empty or None, and assign defaults
@@ -510,6 +498,13 @@ def create_book_rating(request, book_id):
         book_rating.comment = new_comment
         book_rating.save()
 
+        # After processing, construct the redirect URL
+    redirect_url = reverse('read_connect_books')
+
+    # Append the filter parameters as query parameters to the URL
+    for key, value in filter_parameters.items():
+        if value:
+            redirect_url += f'&{key}={value}'
     # Extract the filter parameters from the request.GET when provided
 
     # Include other filter parameters similarly
@@ -587,8 +582,16 @@ def profile(request):
     # Combine the ordered sets of books
     user_statuses = with_reviews | without_reviews
 
+    # Sort user_statuses by the presence of reviews, average rating, and then by publishedDate
+    user_statuses = user_statuses.annotate(has_reviews=Count('book__bookrating')).order_by(
+        '-has_reviews',  # Sort first by the presence of reviews (books with reviews come first)
+        '-average_rating',  # Then sort by average rating in descending order
+        '-book__publishedDate'  # Finally, sort by publishedDate in descending order
+    )
+
     want_to_read_statuses = user_statuses.filter(want_to_read=True)
-    currently_reading_statuses = user_statuses.filter(currently_reading=True).order_by('average_rating')
+    currently_reading_statuses = user_statuses.filter(currently_reading=True)
+    print(currently_reading_statuses)
 
     context = {
         'user_profile': user_profile,
