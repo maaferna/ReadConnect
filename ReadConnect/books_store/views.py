@@ -401,7 +401,7 @@ def read_connect_books(request, author_name='', title='', category='', status=''
 
     # Now you can use 'sort_by' and 'sort_order' in your query
     # Use the Q object to filter books
-    books = Book.objects.filter(query).order_by(sort_by if sort_order == 'asc' else f"-{sort_by}")
+    books = Book.objects.filter(query).order_by(sort_by if sort_order == 'asc' else f"-{sort_by}")[:100]
 
     # Get all UserBookStatus instances for the current user
     user = request.user
