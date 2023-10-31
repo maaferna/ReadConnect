@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Dashboard from '../views/dashboard/Dashboard.vue'
 import SignUp from '../views/SignUp.vue'
 import Login from '../views/Login.vue'
+import MyAccount from '../views/MyAccount.vue'
 
 import store from '../store'
 
@@ -21,12 +22,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/sign-up',
+    path: '/sign-up/',
     name: 'Signup',
     component: SignUp
   },
   {
-    path: '/login',
+    path: '/login/vue/',
     name: 'Login',
     component: Login
   },
@@ -34,6 +35,14 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/dashboard/my-account',
+    name: 'MyAccount',
+    component: MyAccount,
     meta: {
       requireLogin: true
     }
@@ -47,7 +56,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requireLogin) && !store.state.isAuthenticated) {
-    next('/login')
+    next('/login/vue/')
   } else {
     next()
   }

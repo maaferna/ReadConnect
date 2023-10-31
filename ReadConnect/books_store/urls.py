@@ -1,6 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from .views import *
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r"books_currently_reading", UserBookStatusViewSet, basename="wants")
 
 urlpatterns = [
     path('', index, name='home'),
@@ -11,4 +14,6 @@ urlpatterns = [
     path('create_book_rating/<str:book_id>/', create_book_rating, name='create_book_rating'),
     path('edit_profile/', edit_profile, name='edit_profile'),
     path('user_profile/', profile, name='user_profile'),
+    path('want-to-read-books/', WantToReadBooksView.as_view(), name='want_to_read_books'),
+    path('api-books/', include(router.urls)),
 ]

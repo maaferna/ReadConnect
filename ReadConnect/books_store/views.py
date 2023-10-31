@@ -21,6 +21,14 @@ from django.utils import timezone  # Import the timezone module
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.template.loader import render_to_string
 
+from rest_framework import status, generics, viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, action
+
+
+
+from .serializers import *
 from .utils import *
 from .forms import *
 from .models import *
@@ -603,3 +611,25 @@ def profile(request):
     return render(request, 'books_store/profile.html', context)
 
 
+class WantToReadBooksView(APIView):
+    def get(self, request):
+        user = self.request.user
+        want_to_read_books = UserBookStatus.objects.filter(user=user, want_to_read=True)
+
+        # You can then serialize the UserBookStatus objects and return them in the response
+        serializer = UserBookStatusSerializer(want_to_read_books, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserBookStatusViewSet(viewsets.ModelViewSet):
+    queryset = UserBookStatus.objects.all()
+    serializer_class = UserBookStatusSerializer
+
+    @action(detail=False, methods=['GET'])
+    def currently_reading_books(self, request):
+        user = self.request.user
+        currently_reading_statuses = UserBookStatus.objects.filter(user=user, currently_reading=True)
+        books = [status.book for status in currently_reading_statuses]
+        serializer =BookWithUserStatusSerializer(books, many=True)  # Use BookSerializer to serialize books
+        return Response(serializer.data, status=status.HTTP_200_OK)

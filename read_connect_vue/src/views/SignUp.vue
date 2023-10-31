@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
     export default {
         name: 'SignUp',
         data () {
@@ -49,10 +51,10 @@
                     password: this.password
                 }
                 axios
-                    .post("/register/", formData)
+                    .post("/register/vue/", formData)
                     .then(response => {
                         console.log(response)
-                        this.$router.push('/login/')
+                        this.$router.push('/login/vue/')
                     })
                     .catch(error => {
                         if(error.response) {

@@ -54,7 +54,7 @@ export default {
                 password: this.password
                 }
                 axios
-                    .post("/login/", formData)
+                    .post("/login/vue/", formData)
                     .then(response => {
                         const token = reponse.data.auth_token
                         this.$store.commit('setToken', token)

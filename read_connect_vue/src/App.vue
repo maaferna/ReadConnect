@@ -8,6 +8,11 @@
                 <div class="navbar-end">
                     <template v-if="$store.state.isAuthenticated">
                         <router-link to="/dashboard" class="navbar-item">Dashboard</router-link>
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                 <router-link to="/dashboard/my-account" class="button is-light">My Account</router-link>   
+                            </div>
+                        </div>
                      </template>
                      <template v-else>
                         <router-link to="/home" class="navbar-item">Home</router-link>
