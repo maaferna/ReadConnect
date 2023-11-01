@@ -17,6 +17,7 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from allauth.socialaccount.helpers import render_authentication_error
 from django.http import HttpResponseRedirect
 from allauth.socialaccount.models import SocialLogin
+from django.views.decorators.csrf import csrf_exempt
 
 def view_login(request):
   if request.method == "POST":
@@ -107,3 +108,12 @@ class CustomGoogleOAuth2LoginView(OAuth2LoginView):
             except OAuth2Error:
                 return render_authentication_error(self.request)
         return self.oauth2_login()
+
+@csrf_exempt
+def login_vue(request):
+    if request.method == 'POST':
+        # Handle the login logic here
+        # ...
+        return JsonResponse({'message': 'Login successful'})
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=400)

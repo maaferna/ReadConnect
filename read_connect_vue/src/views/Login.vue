@@ -1,81 +1,90 @@
 <template>
-    <div class="page-login">
-        <div class="columns">
-            <div class="column is-4 is-offset-4">
-                <h1 class="title">Log in</h1>
-                <form @submit.prevent="submitForm">
-                    <div class="field">
-                        <label>E-mail</label>
-                        <div class="control">
-                            <input type="email" name="username" class="input" v-model="username">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Password</label>
-                        <div class="control">
-                            <input type="password" name="password" class="input" v-model="password">
-                        </div>
-                    </div>
-                    <div class="notification is-danger" v-if="errors.length">
-                        <p v-for="error in errors" v-bind:key="error">
-                            {{error}}
-                        </p>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <button class="button is-success">Sign Up</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <div>
+      <!-- Login -->
+      <div class="container border p-3 mb-3 bg-light text-dark">
+        <h1>Login</h1>
+      </div>
+      <div class="container border p-3 mb-3 bg-light text-dark">
+        <form @submit.prevent="loginUser">
+            <input type="hidden" name="csrfmiddlewaretoken" ref="csrfTokenInput">
+          <!-- You can bind your form fields to data properties here -->
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" v-model="username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" v-model="password">
+          </div>
+          <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+        <p class="text-center">
+          Don't have an account? <router-link to="/register">Register</router-link> to create one.
+        </p>
+        <!-- Google Sign-up Button (You can integrate this using Vue Router) -->
+        <a href="#" class="btn btn-danger">Register with Google</a>
+      </div>
     </div>
-</template>
-
-<script>
-import axios from "axios"
-
-export default {
-    name: 'Login',
+  </template>
+  
+  <script>
+import axios from 'axios';
+  export default {
     data() {
-        return {
-            username: '',
-            password: '',
-            errors: []
-        }
+      return {
+        username: "",
+        password: "",
+        csrfToken: "",
+      };
     },
     methods: {
-        submitForm(e) {
-            axios.defaults.headers.common['Authorization'] = ""
-            localStorage.removeItem("token")
-            
-            const formData = {
-                 username: this.username,
-                password: this.password
-                }
-                axios
-                    .post("/login/vue/", formData)
-                    .then(response => {
-                        const token = reponse.data.auth_token
-                        this.$store.commit('setToken', token)
-                        axios.defaults.headers.common["Authorization"] = "Token " + token
-                        localStorage.setItem("token", token)
-                        this.$router.push('/dashboard/')
-                    })
-                    .catch(error => {
-                        if(error.response) {
-                            for (const property in error.response.data) {
-                                this.errors.push(`${property}: ${error.response.data[property]}`)
-                            }
-                            console.log(JSON.stringify(error.response.data))
-                        } else if (error.message) {
-                            console.log(JSON.stringify(error.message))
-                        } else {
-                            console.log(JSON.stringify(error))
-                        }
-                    })
-            }
-        }
-    }
+      // Handle user login (you can use Axios to send the login request to your Django backend)
+      loginUser() {
+        const loginData = {
+          username: this.username,
+          password: this.password,
+          csrfmiddlewaretoken: this.csrfToken, // Include the CSRF token
+        };
+  
+        // Use Axios or another HTTP library to send the loginData to your Django backend.
+        // Handle success and error responses as needed.
+         // Make a POST request to your Django backend
+         axios
+            .post('http://127.0.0.1:8000/registration/api/login/vue/', loginData, {
+                'Origin': 'http://localhost:8081',  
+                'X-CSRFToken': this.csrfToken, // Keep the CSRF token header
+                withCredentials: true, // Add this line if not already included
+            })
+            .then((response) => {
+                // Handle a successful login (e.g., redirect to a dashboard or update the UI)
+                console.log('Logged in successfully', response.data);
+                // Commit the setToken mutation to update the store
+                this.$store.commit('setToken', response.data.token);
+                console.log('Logged in successfully', response.data);
 
-</script>
+                // Pass the user's information to the Dashboard route
+                console.log('User Profile Data:', response.data.user_profile);
+
+                this.$router.push({
+                    name: 'Dashboard',
+                    params: { userProfile: response.data.user_profile },
+                });
+                this.successMessage = 'Login successful';
+            })
+            .catch((error) => {
+                // Handle login errors (e.g., display an error message)
+                console.error('Login error', error);
+
+                // You can display an error message to the user
+                this.errorMessage = 'Invalid username or password. Please try again.';
+            });
+      },
+    },
+    mounted() {
+    // Retrieve the CSRF token from the ref and set it in data
+    this.csrfToken = this.$refs.csrfTokenInput.value;
+    },
+
+  };
+  </script>
+  

@@ -4,6 +4,7 @@ import Dashboard from '../views/dashboard/Dashboard.vue'
 import SignUp from '../views/SignUp.vue'
 import Login from '../views/Login.vue'
 import MyAccount from '../views/MyAccount.vue'
+import BooksStore from '../views/dashboard/Books.vue'
 
 import store from '../store'
 
@@ -22,7 +23,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/sign-up/',
+    path: '/sign-up/vue/',
     name: 'Signup',
     component: SignUp
   },
@@ -35,6 +36,7 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    props: (route) => ({ userProfile: route.params.userProfile }), // Accept the parameter
     meta: {
       requireLogin: true
     }
@@ -47,6 +49,14 @@ const routes = [
       requireLogin: true
     }
   },
+  {
+    path: '/dashboard/books-store-vue/',
+    name: 'BooksStore',
+    component: BooksStore,
+    meta: {
+      requireLogin: true
+    }
+  },
 ]
 
 const router = createRouter({
@@ -55,11 +65,16 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requireLogin) && !store.state.isAuthenticated) {
-    next('/login/vue/')
+  console.log('Checking route:', to.name);
+  if (to.matched.some(record => record.meta.requireLogin) && !store.state.isAuthenticated) {
+    console.log('User is not authenticated, redirecting to login');
+    next({ name: 'Login' }); // Navigate to the Login route by name
   } else {
-    next()
+    console.log('User is authenticated or route does not require login');
+    next();
   }
-})
+});
+
+
 
 export default router

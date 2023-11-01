@@ -24,8 +24,8 @@ from django.template.loader import render_to_string
 from rest_framework import status, generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, action
-
+from rest_framework.decorators import api_view, action, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 
 from .serializers import *
@@ -633,3 +633,41 @@ class UserBookStatusViewSet(viewsets.ModelViewSet):
         books = [status.book for status in currently_reading_statuses]
         serializer =BookWithUserStatusSerializer(books, many=True)  # Use BookSerializer to serialize books
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DashboardData(APIView):
+
+    def get(self, request):
+        # Get the user's profile data
+        user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+        # Get user statuses
+        user_statuses = UserBookStatus.objects.filter(user=request.user)
+
+        profile_serializer = UserProfileSerializer(user_profile)
+        status_serializer = UserBookStatusSerializer(user_statuses, many=True)
+
+        data = {
+            'user_profile': profile_serializer.data,
+            'user_statuses': status_serializer.data,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_dashboard_data(request):
+    # If the user reaches this point, they are authenticated
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    user_statuses = UserBookStatus.objects.filter(user=request.user)
+
+    profile_serializer = UserProfileSerializer(user_profile)
+    status_serializer = UserBookStatusSerializer(user_statuses, many=True)
+
+    data = {
+        'user_profile': profile_serializer.data,
+        'user_statuses': status_serializer.data,
+    }
+
+    return Response(data, status=status.HTTP_200_OK)

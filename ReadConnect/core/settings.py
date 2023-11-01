@@ -201,9 +201,12 @@ SOCIALACCOUNT_PROVIDERS = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # settings.py
 
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",  # Replace with your Vue.js frontend URL
+    "http://localhost:8081",
+    "http://localhost:8080",
 ]
 
 CORS_ALLOW_METHODS = [
@@ -224,3 +227,13 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
