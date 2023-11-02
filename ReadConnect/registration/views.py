@@ -117,3 +117,5 @@ def login_vue(request):
         return JsonResponse({'message': 'Login successful'})
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400)
+
+

@@ -671,3 +671,22 @@ def get_dashboard_data(request):
     }
 
     return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_auth_status(request):
+    return Response({'isAuthenticated': True})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_profile(request):
+    user = request.user  # Assuming you're using Django's built-in User model
+    user_data = {
+        'user_id': user.id,
+        'user_name': user.username,
+        # Add other user profile data as needed
+    }
+    return Response({'userProfile': user_data})
+
+

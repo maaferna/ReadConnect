@@ -14,7 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv, find_dotenv
 import sys
-
+from django.conf import settings
+import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -236,4 +237,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+
+JWT_AUTH = {
+    'JWT_SECRET_KEY': settings.SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),  # Set as needed
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),  # Set as needed
 }

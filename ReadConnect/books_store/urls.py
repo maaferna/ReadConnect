@@ -17,4 +17,6 @@ urlpatterns = [
     path('want-to-read-books/', WantToReadBooksView.as_view(), name='want_to_read_books'),
     path('api-books/', include(router.urls)),
     path('api/dashboard-data/', DashboardData.as_view(), name='dashboard-data'),
+    path('api/get-auth-status', get_auth_status, name='get_auth_status'),
+    path('api/get-user-profile', get_user_profile, name='get_user_profile'),
 ]
