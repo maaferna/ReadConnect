@@ -7,7 +7,7 @@
             <div class="navbar-menu">
                 <div class="navbar-end">
                     <template v-if="$store.state.isAuthenticated">
-                        <router-link to="/dashboard/" class="navbar-item">Dashboard</router-link>
+                        <router-link to="/dashboard/user_profile/" class="navbar-item">Dashboard</router-link>
                         <div class="navbar-item">
                             <div class="buttons">
                                  <router-link to="/dashboard/my-account/" class="button is-light">My Account</router-link>   
@@ -39,6 +39,7 @@
 
 <script>
     import axios from 'axios'
+    import store from './store'; // Import your Vuex store
     export default {
         name: 'App',
         beforeCreate() {

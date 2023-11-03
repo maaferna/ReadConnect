@@ -13,6 +13,8 @@ pillow = "*"
 pytest = "*"
 pytest-django = "*"
 django-cors-headers = "*"
+djangorestframework = "*"
+djangorestframework-jwt = "*"
 
 [dev-packages]
 

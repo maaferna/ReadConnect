@@ -1,13 +1,13 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
 export default createStore({
   state: {
     user: {
-      username: ''
+      username: '',
       // Add other user-related properties here
     },
     isAuthenticated: false,
-    token: ''
+    token: '',
   },
   mutations: {
     initializeStore(state) {
@@ -30,6 +30,9 @@ export default createStore({
     updateUser(state, userData) {
       state.user = { ...state.user, ...userData };
     },
+    setIsAuthenticated(state, value) {
+      state.isAuthenticated = value;
+    },
   },
   actions: {
     // Action to update user information
@@ -37,6 +40,6 @@ export default createStore({
       commit('updateUser', userData);
     },
   },
-  modules: {}
-})
+  modules: {},
+});
 

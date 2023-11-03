@@ -10,6 +10,10 @@ from .forms import *
 from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
 
+import jwt
+import secrets
+import json
+
 #Add permission to the views
 from django.contrib.auth.decorators import login_required, permission_required
 from allauth.socialaccount.providers.oauth2.views import OAuth2LoginView
@@ -109,13 +113,38 @@ class CustomGoogleOAuth2LoginView(OAuth2LoginView):
                 return render_authentication_error(self.request)
         return self.oauth2_login()
 
+# Generate or retrieve your secret key
+secret_key = secrets.token_urlsafe(32)
 @csrf_exempt
 def login_vue(request):
     if request.method == 'POST':
-        # Handle the login logic here
-        # ...
-        return JsonResponse({'message': 'Login successful'})
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            username = data.get('username')
+            password = data.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                # Authentication succeeded
+                login(request, user)  # Log in the user
+                user_id = user.id  # Get the user's ID
+
+                # Generate a JWT token with the user's data
+                jwt_token = jwt.encode({'user_id': user_id}, secret_key, algorithm='HS256')
+
+                # Decode the JWT token to a string
+                jwt_token_str = jwt_token.decode('utf-8')
+
+                response_data = {
+                    'token': jwt_token_str,
+                    'message': 'Login successful'
+                }
+                return JsonResponse(response_data)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data'}, status=400)
+        else:
+            # Authentication failed
+            return JsonResponse({'message': 'Invalid username or password'}, status=400)
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400)
-
 

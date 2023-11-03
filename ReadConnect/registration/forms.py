@@ -40,3 +40,5 @@ class ContactForm(forms.ModelForm):
             'company': forms.TextInput(attrs={'class': 'form-control'}),
             'country': forms.Select(attrs={'class': 'form-control'}),
         }
+
+

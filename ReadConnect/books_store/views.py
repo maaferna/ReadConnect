@@ -25,8 +25,7 @@ from rest_framework import status, generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, action, permission_classes
-from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.permissions import IsAuthenticated, BasePermission
 
 from .serializers import *
 from .utils import *
@@ -654,39 +653,42 @@ class DashboardData(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
+class CustomPermission(BasePermission):
+    message = "You do not have permission to access this resource."
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_dashboard_data(request):
-    # If the user reaches this point, they are authenticated
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    user_statuses = UserBookStatus.objects.filter(user=request.user)
-
-    profile_serializer = UserProfileSerializer(user_profile)
-    status_serializer = UserBookStatusSerializer(user_statuses, many=True)
-
-    data = {
-        'user_profile': profile_serializer.data,
-        'user_statuses': status_serializer.data,
-    }
-
-    return Response(data, status=status.HTTP_200_OK)
+    def has_permission(self, request, view):
+        # You can perform custom permission checks here
+        # For example, check if the user has a specific permission
+        return request.user.has_perm('your_permission_name')
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_auth_status(request):
-    return Response({'isAuthenticated': True})
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, CustomPermission])
 def get_user_profile(request):
-    user = request.user  # Assuming you're using Django's built-in User model
-    user_data = {
-        'user_id': user.id,
-        'user_name': user.username,
-        # Add other user profile data as needed
-    }
-    return Response({'userProfile': user_data})
+    # Log the user's permissions and groups
+    print(request.user.get_all_permissions())
+    print(request.user.groups.all())
+    print("Began1")
+    if request.user.is_authenticated:
+        print("Began2")
+        user_profile = UserProfile.objects.get(user=request.user)
+        user_statuses = UserBookStatus.objects.filter(user=request.user)
+        print(user_statuses)
+        print(user_profile)
+        profile_serializer = UserProfileSerializer(user_profile)
+        status_serializer = UserBookStatusSerializer(user_statuses, many=True)
+
+        data = {
+            'isAuthenticated': True,
+            'userProfile': profile_serializer.data,
+            'userStatuses': status_serializer.data,
+        }
+        print(data)
+
+        return JsonResponse(data)  # Serialize data to JSON and return it as a JSON response
+
+    else:
+        return Response({'isAuthenticated': False}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 

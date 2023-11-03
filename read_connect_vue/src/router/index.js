@@ -33,7 +33,7 @@ const routes = [
     component: Login
   },
   {
-    path: '/dashboard',
+    path: '/dashboard/user_profile/',
     name: 'Dashboard',
     component: Dashboard,
     props: (route) => ({ userProfile: route.params.userProfile }), // Accept the parameter
@@ -42,7 +42,7 @@ const routes = [
     }
   },
   {
-    path: '/dashboard/my-account',
+    path: '/dashboard/my-account/',
     name: 'MyAccount',
     component: MyAccount,
     meta: {
@@ -53,6 +53,7 @@ const routes = [
     path: '/dashboard/books-store-vue/',
     name: 'BooksStore',
     component: BooksStore,
+    props: true,
     meta: {
       requireLogin: true
     }
