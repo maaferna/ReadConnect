@@ -66,6 +66,8 @@ export default {
         console.log('Logged in successfully', response.data);
         // In your Login.vue component after a successful login
         this.$store.commit('setIsAuthenticated', true);
+        localStorage.setItem('yourJWTToken', response.data.token); // Store the token in local storage
+
 
         // Set the token in the Vuex store
         this.setToken(response.data.token);

@@ -31,7 +31,8 @@ export default {
       const jwtToken = localStorage.getItem('yourJWTToken'); // Use the correct token variable
       if (jwtToken) {
         try {
-          const authResponse = await axios.get('/api/get-user-profile/', {
+          const authResponse = await axios.get('http://127.0.0.1:8000/api/get-user-profile/', {
+            access_token: jwtToken,
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
